@@ -1,28 +1,63 @@
-import join from './../../assets/images/icons/join.png'
-import register from './../../assets/images/icons/register.png'
-import active from './../../assets/images/icons/active.png'
-import uninstall from './../../assets/images/icons/uninstall.png'
-import RoundedChart from '../../components/RoundedChart';
+import Chart from "react-apexcharts";
+
 export default function Analytics() {
- 
+  const series = [
+    {
+      name: "TEAM A",
+      type: "area",
+      data: [31, 43, 26, 41, 31, 47, 33],
+    },
+  ];
+  const options = {
+    chart: {
+      type: "line",
+    },
+    stroke: {
+      curve: "smooth",
+    },
+    fill: {
+      type: "solid",
+      opacity: [0.35, 1],
+    },
+    labels: [
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday",
+      "Sunday",
+    ],
+    markers: {
+      size: 0,
+    },
+
+    tooltip: {
+      shared: true,
+      intersect: false,
+      y: {
+        formatter: function (y) {
+          if (typeof y !== "undefined") {
+            return y.toFixed(0) + " points";
+          }
+          return y;
+        },
+      },
+    },
+  };
   return (
     <> 
       <div className="row">
       <div className="col-12 pb-4">
           <h2 className=" fw-semibold">Analytics</h2>
-          <p className=" fs-3 text-dark mt-n1 fw-normal">List of active users. </p>
+          <p className=" fs-3 text-dark mt-n1 fw-normal">Weekly Analytics. </p>
         </div>
       </div>
       <div className="row">
         <div className="col-12">
           <div className="card w-100">
             <div className="card-body p-4">
-              <h5 className="card-title fw-semibold mb-4">
-                Active User
-              </h5>
-              <div className="">
-               
-              </div>
+              <Chart options={options} series={series}  type="line" height={350} />
             </div>
           </div>
         </div>

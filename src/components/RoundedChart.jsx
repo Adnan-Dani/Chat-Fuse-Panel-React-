@@ -4,7 +4,7 @@ export default function RoundedChart( {  series = []  , label = [], type="radial
     
     const options = {
         chart: {
-          height: 350,
+          height: 100,
           type: "radialBar",
           toolbar: {
             show: true,
@@ -86,6 +86,7 @@ export default function RoundedChart( {  series = []  , label = [], type="radial
     options={options}
     series={series}
     type={type}
+    height={300}
  
   />
   )
