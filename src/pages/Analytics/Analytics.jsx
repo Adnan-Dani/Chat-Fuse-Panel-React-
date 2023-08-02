@@ -1,4 +1,3 @@
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import Chart from "react-apexcharts";
 
 export default function Analytics() {
@@ -58,7 +57,7 @@ export default function Analytics() {
       </div>
       <div className="row">
         <div className="col-lg-12" >
-        <Chart options={options} series={series} type="line"   />
+        <Chart options={options} series={series} type="line" height={350}  />
       </div>
      
       </div>

@@ -107,19 +107,21 @@ export default function Questions() {
                       aria-expanded="false"
                       aria-controls="collapseExample"
                     >
-                      Button with data-bs-target
+                     <i className="ti ti-arrow-down"> </i>
                     </button>
                   </div>
-                  <div className="collapse" id="collapseExample">
+            
+                </div>
+              </div>
+            </div>
+
+            <div className="collapse" id="collapseExample">
                     <div className="card card-body">
                       Some placeholder content for the collapse component. This
                       panel is hidden by default but revealed when the user
                       activates the relevant trigger.
                     </div>
                   </div>
-                </div>
-              </div>
-            </div>
           </div>
         </div>
       ))}
