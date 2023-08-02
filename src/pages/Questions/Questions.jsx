@@ -111,10 +111,12 @@ export default function Questions() {
                     </button>
                   </div>
                   <div className="collapse" id="collapseExample">
-  <div className="card card-body">
-    Some placeholder content for the collapse component. This panel is hidden by default but revealed when the user activates the relevant trigger.
-  </div>
-</div>
+                    <div className="card card-body">
+                      Some placeholder content for the collapse component. This
+                      panel is hidden by default but revealed when the user
+                      activates the relevant trigger.
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>

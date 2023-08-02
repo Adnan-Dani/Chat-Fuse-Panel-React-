@@ -1,6 +1,6 @@
 import { Link, NavLink } from "react-router-dom";
 import Topbar from "./Topbar";
-import logo from './../assets/logo.png'
+import logo from "./../assets/logo.png";
 import PropTypes from "prop-types";
 export default function Sidebar({ children }) {
   const pages = [
@@ -54,12 +54,8 @@ export default function Sidebar({ children }) {
         <aside className="left-sidebar">
           <div>
             <div className="brand-logo d-flex align-items-center justify-content-between">
-              <Link href={'/dashboard'} className="text-nowrap logo-img ">
-                <img
-                  src={logo}
-                  width="90%"
-                  alt=""
-                />
+              <Link href={"/dashboard"} className="text-nowrap logo-img ">
+                <img src={logo} width="90%" alt="" />
               </Link>
               <div
                 className="close-btn d-xl-none d-block sidebartoggler cursor-pointer"
@@ -78,7 +74,7 @@ export default function Sidebar({ children }) {
                   <li className="sidebar-item" key={index}>
                     <NavLink
                       className="sidebar-link"
-                      to={page.redirect} 
+                      to={page.redirect}
                       aria-expanded="false"
                     >
                       <span>
@@ -88,7 +84,6 @@ export default function Sidebar({ children }) {
                     </NavLink>
                   </li>
                 ))}
-  
               </ul>
               <div className="unlimited-access hide-menu bg-light-primary position-relative mb-7 mt-5 rounded">
                 <div className="d-flex">
@@ -96,9 +91,7 @@ export default function Sidebar({ children }) {
                     <h6 className="fw-semibold fs-4 mb-6 text-dark w-85">
                       Upgrade to pro
                     </h6>
-                    <a 
-                      className="btn btn-primary fs-2 fw-semibold lh-sm"
-                    >
+                    <a className="btn btn-primary fs-2 fw-semibold lh-sm">
                       Buy Pro
                     </a>
                   </div>
@@ -116,7 +109,7 @@ export default function Sidebar({ children }) {
         </aside>
         <div className="body-wrapper">
           <Topbar />
-          <div className="container-fluid">
+          <div className="container">
             {children}
             <div className="py-6 px-6 text-center">
               <p className="mb-0 fs-4">
