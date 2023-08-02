@@ -1,162 +1,147 @@
-import join from './../../assets/images/icons/join.png'
-import register from './../../assets/images/icons/register.png'
-import active from './../../assets/images/icons/active.png'
-import uninstall from './../../assets/images/icons/uninstall.png'
-import RoundedChart from '../../components/RoundedChart';
 export default function ActiveUsers() {
-  const cards = [
+  const users = [
     {
-      icon: join,
-      counter: 100,
-      label: "Active Users",
+      id: 1,
+      userName: "Adnan Khan",
+      email: "adnan@gmail.com",
+      pic: "https://images.pexels.com/photos/733872/pexels-photo-733872.jpeg?cs=srgb&dl=pexels-andrea-piacquadio-733872.jpg&fm=jpg",
     },
     {
-      icon: join,
-      counter: 100,
-      label: "New Users",
+      id: 2,
+      userName: "John Doe",
+      email: "john.doe@example.com",
+      pic: "https://images.pexels.com/photos/733872/pexels-photo-733872.jpeg?cs=srgb&dl=pexels-andrea-piacquadio-733872.jpg&fm=jpg",
     },
     {
-      icon: uninstall,
-      counter: 100,
-      label: "Uninstalled",
+      id: 3,
+      userName: "Jane Smith",
+      email: "jane.smith@example.com",
+      pic: "https://images.pexels.com/photos/733872/pexels-photo-733872.jpeg?cs=srgb&dl=pexels-andrea-piacquadio-733872.jpg&fm=jpg",
     },
     {
-      icon: register,
-      counter: 100,
-      label: "Total Registeration",
+      id: 4,
+      userName: "Michael Johnson",
+      email: "michael.johnson@example.com",
+      pic: "https://images.pexels.com/photos/733872/pexels-photo-733872.jpeg?cs=srgb&dl=pexels-andrea-piacquadio-733872.jpg&fm=jpg",
+    },
+    {
+      id: 5,
+      userName: "Emily Williams",
+      email: "emily.williams@example.com",
+      pic: "https://images.pexels.com/photos/733872/pexels-photo-733872.jpeg?cs=srgb&dl=pexels-andrea-piacquadio-733872.jpg&fm=jpg",
+    },
+    {
+      id: 6,
+      userName: "Robert Brown",
+      email: "robert.brown@example.com",
+      pic: "https://images.pexels.com/photos/733872/pexels-photo-733872.jpeg?cs=srgb&dl=pexels-andrea-piacquadio-733872.jpg&fm=jpg",
+    },
+    {
+      id: 7,
+      userName: "Sophia Lee",
+      email: "sophia.lee@example.com",
+      pic: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTdZSsRW8ahClgpWbdmk1wKCv_6d5ZNEf_kuZLEmarGpS7KAd8cHuXo9UPSJOy_EESmpu8&usqp=CAU",
+    },
+    {
+      id: 8,
+      userName: "William Garcia",
+      email: "william.garcia@example.com",
+      pic: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSnS1o3mO3S_Nkfw1WAGaRJ6KaOGgODpfoOsA&usqp=CAU",
+    },
+    {
+      id: 9,
+      userName: "Olivia Rodriguez",
+      email: "olivia.rodriguez@example.com",
+      pic: "https://images.pexels.com/photos/733872/pexels-photo-733872.jpeg?cs=srgb&dl=pexels-andrea-piacquadio-733872.jpg&fm=jpg",
+    },
+    {
+      id: 10,
+      userName: "James Martinez",
+      email: "james.martinez@example.com",
+      pic: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTh8fHByb2ZpbGV8ZW58MHx8MHx8fDA%3D&w=1000&q=80",
     },
   ];
+
   return (
-    <> 
-      <div className="row">
-      <div className="col-12 pb-4">
-          <h2 className=" fw-semibold">Active Users</h2>
-          <p className=" fs-3 text-dark mt-n1 fw-normal">List of active users. </p>
-        </div>
-      </div>
+    <>
       <div className="row">
         <div className="col-12">
-          <div className="card w-100">
-            <div className="card-body p-4">
-             
-              <div className="table-responsive">
-                <table className="table text-nowrap mb-0 align-middle table-hover" style={{tableLayout: "fixed"}}>
-                  <thead className="text-dark fs-4">
-                    <tr>
-                      <th className="border-bottom-0">
-                        <h6 className="fw-semibold mb-0">Id</h6>
-                      </th>
-                      <th className="border-bottom-0">
-                        <h6 className="fw-semibold mb-0">Assigned</h6>
-                      </th>
-                      <th className="border-bottom-0">
-                        <h6 className="fw-semibold mb-0">Name</h6>
-                      </th>
-                      <th className="border-bottom-0">
-                        <h6 className="fw-semibold mb-0">Priority</h6>
-                      </th>
-                      <th className="border-bottom-0">
-                        <h6 className="fw-semibold mb-0">Budget</h6>
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td className="border-bottom-0">
-                        <h6 className="fw-semibold mb-0">1</h6>
-                      </td>
-                      <td className="border-bottom-0">
-                        <h6 className="fw-semibold mb-1">Sunil Joshi</h6>
-                        <span className="fw-normal">Web Designer</span>
-                      </td>
-                      <td className="border-bottom-0">
-                        <p className="mb-0 fw-normal">Elite Admin</p>
-                      </td>
-                      <td className="border-bottom-0">
-                        <div className="d-flex align-items-center gap-2">
-                          <span className="badge bg-primary rounded-3 fw-semibold">
-                            Low
-                          </span>
-                        </div>
-                      </td>
-                      <td className="border-bottom-0">
-                        <h6 className="fw-semibold mb-0 fs-4">$3.9</h6>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td className="border-bottom-0">
-                        <h6 className="fw-semibold mb-0">2</h6>
-                      </td>
-                      <td className="border-bottom-0">
-                        <h6 className="fw-semibold mb-1">Andrew McDownland</h6>
-                        <span className="fw-normal">Project Manager</span>
-                      </td>
-                      <td className="border-bottom-0">
-                        <p className="mb-0 fw-normal">Real Homes WP Theme</p>
-                      </td>
-                      <td className="border-bottom-0">
-                        <div className="d-flex align-items-center gap-2">
-                          <span className="badge bg-secondary rounded-3 fw-semibold">
-                            Medium
-                          </span>
-                        </div>
-                      </td>
-                      <td className="border-bottom-0">
-                        <h6 className="fw-semibold mb-0 fs-4">$24.5k</h6>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td className="border-bottom-0">
-                        <h6 className="fw-semibold mb-0">3</h6>
-                      </td>
-                      <td className="border-bottom-0">
-                        <h6 className="fw-semibold mb-1">Christopher Jamil</h6>
-                        <span className="fw-normal">Project Manager</span>
-                      </td>
-                      <td className="border-bottom-0">
-                        <p className="mb-0 fw-normal">MedicalPro WP Theme</p>
-                      </td>
-                      <td className="border-bottom-0">
-                        <div className="d-flex align-items-center gap-2">
-                          <span className="badge bg-danger rounded-3 fw-semibold">
-                            High
-                          </span>
-                        </div>
-                      </td>
-                      <td className="border-bottom-0">
-                        <h6 className="fw-semibold mb-0 fs-4">$12.8k</h6>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td className="border-bottom-0">
-                        <h6 className="fw-semibold mb-0">4</h6>
-                      </td>
-                      <td className="border-bottom-0">
-                        <h6 className="fw-semibold mb-1">Nirav Joshi</h6>
-                        <span className="fw-normal">Frontend Engineer</span>
-                      </td>
-                      <td className="border-bottom-0">
-                        <p className="mb-0 fw-normal">Hosting Press HTML</p>
-                      </td>
-                      <td className="border-bottom-0">
-                        <div className="d-flex align-items-center gap-2">
-                          <span className="badge bg-success rounded-3 fw-semibold">
-                            Critical
-                          </span>
-                        </div>
-                      </td>
-                      <td className="border-bottom-0">
-                        <h6 className="fw-semibold mb-0 fs-4">$2.4k</h6>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
+          <div className="row">
+            <div className="col-12 pb-4">
+              <h2 className=" fw-semibold">Active Users</h2>
+              <p className=" fs-3 text-dark mt-n1 fw-normal">
+                List of active users.{" "}
+              </p>
+            </div>
+          </div>
+          <div className="row">
+            <div className="col-12">
+              <div className="card w-100">
+                <div className="card-body p-4">
+                  <div className="table-responsive">
+                    <table
+                      className="table text-nowrap mb-0 align-middle table-hover"
+                      style={{ tableLayout: "fixed" }}
+                    >
+                      <thead className="text-dark fs-4">
+                        <tr>
+                          <th className="border-bottom-0">
+                            <h6 className="fw-semibold mb-0">Id</h6>
+                          </th>
+                          <th className="border-bottom-0">
+                            <h6 className="fw-semibold mb-0">Username</h6>
+                          </th>
+                          <th className="border-bottom-0">
+                            <h6 className="fw-semibold mb-0">Email</h6>
+                          </th>
+                          <th className="border-bottom-0">
+                            <h6 className="fw-semibold mb-0">Status</h6>
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {users.length < 1 ? (
+                           <tr className="text-center">
+                           <td></td>
+                           <td>No users active</td>
+                           </tr>
+                        ) : (
+                          users.map((user, index) => (
+                            <tr key={index}>
+                              <td className="border-bottom-0">
+                                <h6 className="fw-semibold mb-0">{user.id}</h6>
+                              </td>
+                              <td className="border-bottom-0">
+                                <div className="d-flex align-items-center">
+                                  <img src={user.pic} alt="" height={50} width={50} style={{ borderRadius:"50%" , marginRight:"4px" }} />
+                                  <h6 className="fw-semibold mb-1 pl-2">
+                                  {user.userName}
+                                </h6> 
+                                </div>
+                              </td>
+                              <td className="border-bottom-0">
+                                <p className="mb-0 fw-normal">{user.email}</p>
+                              </td>
+                              <td className="border-bottom-0">
+                                <div className="d-flex align-items-center gap-2">
+                                  <span className="badge bg-success rounded-3 fw-semibold">
+                                    active
+                                  </span>
+                                </div>
+                              </td>
+                               
+                            </tr>
+                          ))
+                        )}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-   
     </>
   );
 }

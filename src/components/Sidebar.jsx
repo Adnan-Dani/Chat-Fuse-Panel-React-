@@ -1,5 +1,6 @@
-import { NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import Topbar from "./Topbar";
+import logo from './../assets/logo.png'
 import PropTypes from "prop-types";
 export default function Sidebar({ children }) {
   const pages = [
@@ -53,13 +54,13 @@ export default function Sidebar({ children }) {
         <aside className="left-sidebar">
           <div>
             <div className="brand-logo d-flex align-items-center justify-content-between">
-              <a href="./index.html" className="text-nowrap logo-img ">
+              <Link href={'/dashboard'} className="text-nowrap logo-img ">
                 <img
-                  src="https://www.fuseuniversal.com/hs-fs/hubfs/fuse_pink_logo-1.png?width=2197&name=fuse_pink_logo-1.png"
-                  width=" 80"
+                  src={logo}
+                  width="90%"
                   alt=""
                 />
-              </a>
+              </Link>
               <div
                 className="close-btn d-xl-none d-block sidebartoggler cursor-pointer"
                 id="sidebarCollapse"
