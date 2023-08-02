@@ -1,16 +1,17 @@
-import join from './../../assets/images/icons/join.png'
-import register from './../../assets/images/icons/register.png'
-import active from './../../assets/images/icons/active.png'
-import uninstall from './../../assets/images/icons/uninstall.png'
-import RoundedChart from '../../components/RoundedChart';
+import join from "./../../assets/images/icons/join.png";
+import register from "./../../assets/images/icons/register.png";
+import active from "./../../assets/images/icons/active.png";
+import uninstall from "./../../assets/images/icons/uninstall.png";
+import RoundedChart from "../../components/RoundedChart";
 export default function Customers() {
- 
   return (
-    <> 
-      <div className="row">
-      <div className="col-12 pb-4">
+    <>
+      <div className="row ">
+        <div className="col-12 d-block pb-4">
           <h2 className=" fw-semibold">Customers Collection</h2>
-          <p className=" fs-3 text-dark mt-n1 fw-normal">List of active users. </p>
+          <p className=" fs-3 text-dark mt-n1 fw-normal ">
+            List of active users.{" "} 
+          </p>
         </div>
       </div>
       <div className="row">
@@ -21,7 +22,7 @@ export default function Customers() {
                 Active User
               </h5>
               <div className="table-responsive">
-                <table className="table text-nowrap mb-0 align-middle">
+                <table className="table text-nowrap mb-0 align-middle table-hover" style={{tableLayout: "fixed"}}>
                   <thead className="text-dark fs-4">
                     <tr>
                       <th className="border-bottom-0">
@@ -137,7 +138,6 @@ export default function Customers() {
           </div>
         </div>
       </div>
-   
     </>
   );
 }

@@ -26,18 +26,18 @@ export default function Sidebar({ children }) {
     {
       label: "Question Collection",
       icon: "ti ti-template",
-      redirect: "/collections",
+      redirect: "/questions",
     },
     {
       label: "Messages",
       icon: "ti ti-mail",
       redirect: "/messages",
     },
-    {
-      label: "Settings",
-      icon: "ti ti-adjustments-horizontal",
-      redirect: "/settings",
-    },
+    // {
+    //   label: "Settings",
+    //   icon: "ti ti-adjustments-horizontal",
+    //   redirect: "/settings",
+    // },
   ];
   return (
     <>
@@ -115,7 +115,6 @@ export default function Sidebar({ children }) {
         </aside>
         <div className="body-wrapper">
           <Topbar />
-
           <div className="container-fluid">
             {children}
             <div className="py-6 px-6 text-center">

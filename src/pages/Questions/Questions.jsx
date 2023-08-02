@@ -1,143 +1,173 @@
-import join from './../../assets/images/icons/join.png'
-import register from './../../assets/images/icons/register.png'
-import active from './../../assets/images/icons/active.png'
-import uninstall from './../../assets/images/icons/uninstall.png'
-import RoundedChart from '../../components/RoundedChart';
+import join from "./../../assets/images/icons/join.png";
+import register from "./../../assets/images/icons/register.png";
+import active from "./../../assets/images/icons/active.png";
+import uninstall from "./../../assets/images/icons/uninstall.png";
+import Chart from "react-apexcharts";
+import RoundedChart from "../../components/RoundedChart";
 export default function Questions() {
- 
+  const cards = [
+    {
+      icon: active,
+      counter: 100,
+      label: "Active Users",
+    },
+    {
+      icon: join,
+      counter: 100,
+      label: "New Users",
+    },
+    {
+      icon: uninstall,
+      counter: 100,
+      label: "Uninstalled",
+    },
+    {
+      icon: register,
+      counter: 100,
+      label: "Total Registeration",
+    },
+  ];
+
+  const series = [
+    {
+      name: "TEAM A",
+      type: "area",
+      data: [31, 43, 26, 41, 31, 47, 33],
+    },
+  ];
+  const options = {
+    chart: {
+      type: "line",
+    },
+    stroke: {
+      curve: "smooth",
+    },
+    fill: {
+      type: "solid",
+      opacity: [0.35, 1],
+    },
+    labels: [
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday",
+      "Sunday",
+    ],
+    markers: {
+      size: 0,
+    },
+
+    tooltip: {
+      shared: true,
+      intersect: false,
+      y: {
+        formatter: function (y) {
+          if (typeof y !== "undefined") {
+            return y.toFixed(0) + " points";
+          }
+          return y;
+        },
+      },
+    },
+  };
+  const barSeries = [
+    {
+      data: [21, 22, 10, 28, 16, 21, 13, 30],
+    },
+  ];
+  const colors = [
+    "red", // Monday
+    "blue", // Tuesday
+    "green", // Wednesday
+    "orange", // Thursday
+    "purple", // Friday
+    "brown", // Saturday
+    "pink", // Sunday
+  ];
+  const barOptions = {
+    chart: {
+      height: 300,
+      type: "bar",
+    },
+    plotOptions: {
+      bar: {
+        columnWidth: "45%",
+        distributed: true,
+      },
+    },
+    dataLabels: {
+      enabled: false,
+    },
+    legend: {
+      show: false,
+    },
+    colors: colors,
+    xaxis: {
+      categories: [
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday",
+        "Sunday",
+      ],
+      labels: {
+        style: {
+          fontSize: "12px",
+          colors: colors,
+        },
+      },
+    },
+  };
+
   return (
-    <> 
-      <div className="row">
-      <div className="col-12 pb-4">
-          <h2 className=" fw-semibold">Questions</h2>
-          <p className=" fs-3 text-dark mt-n1 fw-normal">List of active users. </p>
+    <>
+      <div className="row ">
+        <div className="col-12 pb-4">
+          <h2 className=" fw-semibold">Question Collections</h2>
+          <p>Welcome Back.</p>
         </div>
       </div>
-      <div className="row">
-        <div className="col-12">
-          <div className="card w-100">
-            <div className="card-body p-4">
-              <h5 className="card-title fw-semibold mb-4">
-                Active User
-              </h5>
-              <div className="table-responsive">
-                <table className="table text-nowrap mb-0 align-middle">
-                  <thead className="text-dark fs-4">
-                    <tr>
-                      <th className="border-bottom-0">
-                        <h6 className="fw-semibold mb-0">Id</h6>
-                      </th>
-                      <th className="border-bottom-0">
-                        <h6 className="fw-semibold mb-0">Assigned</h6>
-                      </th>
-                      <th className="border-bottom-0">
-                        <h6 className="fw-semibold mb-0">Name</h6>
-                      </th>
-                      <th className="border-bottom-0">
-                        <h6 className="fw-semibold mb-0">Priority</h6>
-                      </th>
-                      <th className="border-bottom-0">
-                        <h6 className="fw-semibold mb-0">Budget</h6>
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td className="border-bottom-0">
-                        <h6 className="fw-semibold mb-0">1</h6>
-                      </td>
-                      <td className="border-bottom-0">
-                        <h6 className="fw-semibold mb-1">Sunil Joshi</h6>
-                        <span className="fw-normal">Web Designer</span>
-                      </td>
-                      <td className="border-bottom-0">
-                        <p className="mb-0 fw-normal">Elite Admin</p>
-                      </td>
-                      <td className="border-bottom-0">
-                        <div className="d-flex align-items-center gap-2">
-                          <span className="badge bg-primary rounded-3 fw-semibold">
-                            Low
-                          </span>
-                        </div>
-                      </td>
-                      <td className="border-bottom-0">
-                        <h6 className="fw-semibold mb-0 fs-4">$3.9</h6>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td className="border-bottom-0">
-                        <h6 className="fw-semibold mb-0">2</h6>
-                      </td>
-                      <td className="border-bottom-0">
-                        <h6 className="fw-semibold mb-1">Andrew McDownland</h6>
-                        <span className="fw-normal">Project Manager</span>
-                      </td>
-                      <td className="border-bottom-0">
-                        <p className="mb-0 fw-normal">Real Homes WP Theme</p>
-                      </td>
-                      <td className="border-bottom-0">
-                        <div className="d-flex align-items-center gap-2">
-                          <span className="badge bg-secondary rounded-3 fw-semibold">
-                            Medium
-                          </span>
-                        </div>
-                      </td>
-                      <td className="border-bottom-0">
-                        <h6 className="fw-semibold mb-0 fs-4">$24.5k</h6>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td className="border-bottom-0">
-                        <h6 className="fw-semibold mb-0">3</h6>
-                      </td>
-                      <td className="border-bottom-0">
-                        <h6 className="fw-semibold mb-1">Christopher Jamil</h6>
-                        <span className="fw-normal">Project Manager</span>
-                      </td>
-                      <td className="border-bottom-0">
-                        <p className="mb-0 fw-normal">MedicalPro WP Theme</p>
-                      </td>
-                      <td className="border-bottom-0">
-                        <div className="d-flex align-items-center gap-2">
-                          <span className="badge bg-danger rounded-3 fw-semibold">
-                            High
-                          </span>
-                        </div>
-                      </td>
-                      <td className="border-bottom-0">
-                        <h6 className="fw-semibold mb-0 fs-4">$12.8k</h6>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td className="border-bottom-0">
-                        <h6 className="fw-semibold mb-0">4</h6>
-                      </td>
-                      <td className="border-bottom-0">
-                        <h6 className="fw-semibold mb-1">Nirav Joshi</h6>
-                        <span className="fw-normal">Frontend Engineer</span>
-                      </td>
-                      <td className="border-bottom-0">
-                        <p className="mb-0 fw-normal">Hosting Press HTML</p>
-                      </td>
-                      <td className="border-bottom-0">
-                        <div className="d-flex align-items-center gap-2">
-                          <span className="badge bg-success rounded-3 fw-semibold">
-                            Critical
-                          </span>
-                        </div>
-                      </td>
-                      <td className="border-bottom-0">
-                        <h6 className="fw-semibold mb-0 fs-4">$2.4k</h6>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
+      <div className="row align-items-center" >
+        <div className="col-md-1">1</div>
+        <div className="col-md-11">
+          <div className="card">
+            <div className="card-body">
+              <div className="row">
+                <div className="col-md-2">
+                  <img
+                    src="https://c4.wallpaperflare.com/wallpaper/595/327/767/katherine-langford-beautiful-wallpaper-preview.jpg"
+                    height={70}
+                    width={70}
+                    className=" "
+                    style={{ borderRadius: "50% !important" }}
+                    alt="..."
+                  />
+                </div>
+                <div className="col-md-2">
+                  <h6 className=" fw-semibold">Username</h6>
+                  <p>Kamran Creation</p>
+                </div>
+                <div className="col-md-3">
+                  <h6 className=" fw-semibold">Mobile Number</h6>
+                  <p>Kamran Creation</p>
+                </div>
+                <div className="col-md-3">
+                  <h6 className=" fw-semibold">Email</h6>
+                  <p>Kamran Creation </p>
+                </div>
+                <div className="col-md-2">
+                  <h6 className=" fw-semibold">Question List</h6>
+                  <p>v</p>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-   
+      </div> 
     </>
   );
 }

@@ -17,7 +17,7 @@ function App() {
             <Route path="/users" element={<ActiveUsers />} />
             <Route path="/customers" element={<Customers />} />
             <Route path="/analytics" element={<Analytics />} />
-            <Route path="/questions" element={<Questions />} />
+            <Route path="/questions" element={<Questions />} /> 
           </Routes>
         </Sidebar>
       </BrowserRouter>

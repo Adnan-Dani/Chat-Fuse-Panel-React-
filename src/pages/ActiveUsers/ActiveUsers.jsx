@@ -38,11 +38,9 @@ export default function ActiveUsers() {
         <div className="col-12">
           <div className="card w-100">
             <div className="card-body p-4">
-              <h5 className="card-title fw-semibold mb-4">
-                Active User
-              </h5>
+             
               <div className="table-responsive">
-                <table className="table text-nowrap mb-0 align-middle">
+                <table className="table text-nowrap mb-0 align-middle table-hover" style={{tableLayout: "fixed"}}>
                   <thead className="text-dark fs-4">
                     <tr>
                       <th className="border-bottom-0">

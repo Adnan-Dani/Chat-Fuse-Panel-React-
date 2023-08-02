@@ -1,5 +1,4 @@
-import join from "./../../assets/images/icons/join.png";
-import ApexCharts from "apexcharts";
+import join from "./../../assets/images/icons/join.png"; 
 import register from "./../../assets/images/icons/register.png";
 import active from "./../../assets/images/icons/active.png";
 import uninstall from "./../../assets/images/icons/uninstall.png";
