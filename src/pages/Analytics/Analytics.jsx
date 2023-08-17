@@ -56,6 +56,10 @@ export default function Analytics() {
         </div>
       </div>
       <div className="row">
+      <div className="col-12 pb-4">
+          <h2 className=" fw-semibold">Analytics</h2>
+          <p className=" fs-3 text-dark mt-n1 fw-normal">Weekly Analytics. </p>
+        </div>
         <div className="col-lg-12" >
         <Chart options={options} series={series} type="line" height={350}  />
       </div>

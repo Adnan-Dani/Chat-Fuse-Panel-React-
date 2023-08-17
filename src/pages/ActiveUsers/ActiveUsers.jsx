@@ -75,6 +75,12 @@ export default function ActiveUsers() {
             </div>
           </div>
           <div className="row">
+          <div className="col-12 pb-4">
+              <h2 className=" fw-semibold">Active Users</h2>
+              <p className=" fs-3 text-dark mt-n1 fw-normal">
+                List of active users.{" "}
+              </p>
+            </div>
             <div className="col-12">
               <div className="card w-100">
                 <div className="card-body p-4">

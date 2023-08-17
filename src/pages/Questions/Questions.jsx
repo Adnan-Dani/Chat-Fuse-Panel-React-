@@ -50,7 +50,13 @@ export default function Questions() {
           <p>List of all questions.</p>
         </div>
       </div>
-      {loading
+<div className="row">
+<div className="col-12 pb-4">
+          <h2 className=" fw-semibold">Question Collections</h2>
+          <p>List of all questions.</p>
+        </div>
+  <div className="col-12">
+  {loading
         ? [1, 3, 4, 5, 6, 7].map((item, index) => (
             <div key={index} className="row align-items-center">
               <div className="col-md-1">{index + 1}</div>
@@ -186,6 +192,8 @@ export default function Questions() {
         <button onClick={() => handlePageChange(currentPage + 1)}>Next</button>
       </div>
       }
+  </div>
+</div>
      
     </>
   );
