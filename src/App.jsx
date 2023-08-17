@@ -6,6 +6,7 @@ import Customers from "./pages/Customers/Customers";
 import Analytics from "./pages/Analytics/Analytics";
 import Questions from "./pages/Questions/Questions";
 import Login from './pages/login/Login';
+import { SnackbarProvider } from "notistack";
 const NotFound = () => {
   return (
     <div className="text-center">
@@ -14,20 +15,39 @@ const NotFound = () => {
     </div>
   );
 }
+
+const  PrivateRoute = ({ children })=>{
+  const token = localStorage.getItem("token");
+  if(!token){
+    window.location.href = "/";
+    return;
+  }
+  return children;
+}
+const  LoginRoute = ({ children })=>{
+  const token = localStorage.getItem("token");
+  if(token){
+    window.location.href = "/dashboard";
+    return;
+  }
+  return children;
+}
 function App() {
   return (
     <>
+    <SnackbarProvider>
       <BrowserRouter>
           <Routes>
-            <Route index path="/" element={<Login />} />
-            <Route path="/dashboard" element={<Sidebar><Dashboard /></Sidebar>} />
-            <Route path="/users" element={<Sidebar><ActiveUsers /></Sidebar>} />
-            <Route path="/customers" element={<Sidebar><Customers /></Sidebar>} />
-            <Route path="/analytics" element={<Analytics />} />
-            <Route path="/questions" element={<Sidebar><Questions /></Sidebar>} />  
+            <Route index path="/" element={<LoginRoute><Login /></LoginRoute>} />
+            <Route path="/dashboard" element={<PrivateRoute><Sidebar><Dashboard /></Sidebar></PrivateRoute>} />
+            <Route path="/users" element={<PrivateRoute><Sidebar><ActiveUsers /></Sidebar></PrivateRoute>} />
+            <Route path="/customers" element={<PrivateRoute><Sidebar><Customers /></Sidebar></PrivateRoute>} />
+            <Route path="/analytics" element={<PrivateRoute><Sidebar><Analytics /></Sidebar></PrivateRoute>} />
+            <Route path="/questions" element={<PrivateRoute><Sidebar><Questions /></Sidebar></PrivateRoute>} />  
             <Route path="/*" element={<NotFound />} />
           </Routes>
       </BrowserRouter>
+      </SnackbarProvider> 
     </>
   );
 }

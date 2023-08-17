@@ -4,7 +4,7 @@ import { enqueueSnackbar } from 'notistack';
 axios.defaults.baseURL = import.meta.env.VITE_APP_API_URL;
 axios.defaults.headers.post['Content-Type'] = 'application/json';
 axios.defaults.headers.post['Access-Control-Allow-Origin'] = '*';
-axios.defaults.headers.common['token'] = localStorage.getItem('token');
+axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
 axios.interceptors.response.use(
     null,
     error => {

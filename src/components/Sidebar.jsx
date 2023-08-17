@@ -29,11 +29,11 @@ export default function Sidebar({ children }) {
       icon: "ti ti-template",
       redirect: "/questions",
     },
-    {
-      label: "Messages",
-      icon: "ti ti-mail",
-      redirect: "/messages",
-    },
+    // {
+    //   label: "Messages",
+    //   icon: "ti ti-mail",
+    //   redirect: "/messages",
+    // },
     // {
     //   label: "Settings",
     //   icon: "ti ti-adjustments-horizontal",

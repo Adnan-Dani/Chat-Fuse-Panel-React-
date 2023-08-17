@@ -1,66 +1,47 @@
+import { useEffect, useState } from "react";
+import http from "./../../services/HttpService";
+
 export default function Questions() {
-  const users = [
-    {
-      id: 1,
-      userName: "Adnan Khan",
-      email: "adnan@gmail.com",
-      pic: "https://images.pexels.com/photos/733872/pexels-photo-733872.jpeg?cs=srgb&dl=pexels-andrea-piacquadio-733872.jpg&fm=jpg",
-    },
-    {
-      id: 2,
-      userName: "John Doe",
-      email: "john.doe@example.com",
-      pic: "https://images.pexels.com/photos/733872/pexels-photo-733872.jpeg?cs=srgb&dl=pexels-andrea-piacquadio-733872.jpg&fm=jpg",
-    },
-    {
-      id: 3,
-      userName: "Jane Smith",
-      email: "jane.smith@example.com",
-      pic: "https://images.pexels.com/photos/733872/pexels-photo-733872.jpeg?cs=srgb&dl=pexels-andrea-piacquadio-733872.jpg&fm=jpg",
-    },
-    {
-      id: 4,
-      userName: "Michael Johnson",
-      email: "michael.johnson@example.com",
-      pic: "https://images.pexels.com/photos/733872/pexels-photo-733872.jpeg?cs=srgb&dl=pexels-andrea-piacquadio-733872.jpg&fm=jpg",
-    },
-    {
-      id: 5,
-      userName: "Emily Williams",
-      email: "emily.williams@example.com",
-      pic: "https://images.pexels.com/photos/733872/pexels-photo-733872.jpeg?cs=srgb&dl=pexels-andrea-piacquadio-733872.jpg&fm=jpg",
-    },
-    {
-      id: 6,
-      userName: "Robert Brown",
-      email: "robert.brown@example.com",
-      pic: "https://images.pexels.com/photos/733872/pexels-photo-733872.jpeg?cs=srgb&dl=pexels-andrea-piacquadio-733872.jpg&fm=jpg",
-    },
-    {
-      id: 7,
-      userName: "Sophia Lee",
-      email: "sophia.lee@example.com",
-      pic: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTdZSsRW8ahClgpWbdmk1wKCv_6d5ZNEf_kuZLEmarGpS7KAd8cHuXo9UPSJOy_EESmpu8&usqp=CAU",
-    },
-    {
-      id: 8,
-      userName: "William Garcia",
-      email: "william.garcia@example.com",
-      pic: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSnS1o3mO3S_Nkfw1WAGaRJ6KaOGgODpfoOsA&usqp=CAU",
-    },
-    {
-      id: 9,
-      userName: "Olivia Rodriguez",
-      email: "olivia.rodriguez@example.com",
-      pic: "https://images.pexels.com/photos/733872/pexels-photo-733872.jpeg?cs=srgb&dl=pexels-andrea-piacquadio-733872.jpg&fm=jpg",
-    },
-    {
-      id: 10,
-      userName: "James Martinez",
-      email: "james.martinez@example.com",
-      pic: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTh8fHByb2ZpbGV8ZW58MHx8MHx8fDA%3D&w=1000&q=80",
-    },
-  ];
+  const [users, setUsers] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [recordsPerPage] = useState(10);
+  const [loading, setLoading] = useState(false);
+
+  const [ totalCustomer , setTotalCustomers ] = useState([]);
+
+
+  const getUserInfo = (id)=>{
+    return totalCustomer.find(user=> user.id === id);
+  }
+
+  const totalPages = Math.ceil(users.length / recordsPerPage);
+
+  const getList = () => {
+    setLoading(true);
+    http.get("answers").then((res) => {
+
+      // const data = res.data?.answers.map(answer => {
+      //   userInfo = getUserInfo()
+      // })
+      setUsers(res.data.users || []);
+      setLoading(false);
+    });
+  };
+
+  useEffect(() => {
+    // http.get("users").then((res) => setTotalCustomers(res.data.users || []));
+    getList();
+  }, []);
+  const paginatedUsers = users.slice(
+    (currentPage - 1) * recordsPerPage,
+    currentPage * recordsPerPage
+  );
+
+  const handlePageChange = (newPage) => {
+    if (newPage >= 1 && newPage <= totalPages) {
+      setCurrentPage(newPage);
+    }
+  };
   return (
     <>
       <div className="row ">
@@ -69,62 +50,143 @@ export default function Questions() {
           <p>List of all questions.</p>
         </div>
       </div>
-      {users.map((user, index) => (
-        <div key={index} className="row align-items-center">
-          <div className="col-md-1">1</div>
-          <div className="col-md-11">
-            <div className="card">
-              <div className="card-body">
-                <div className="row">
-                  <div className="col-md-2">
-                    <img
-                      src={user.pic}
-                      alt=""
-                      height={50}
-                      width={50}
-                      style={{ borderRadius: "30%" }}
-                    />
+      {loading
+        ? [1, 3, 4, 5, 6, 7].map((item, index) => (
+            <div key={index} className="row align-items-center">
+              <div className="col-md-1">{index + 1}</div>
+              <div className="col-md-11">
+                <div className="card">
+                  <div className="card-body">
+                    <div className="row placeholder-glow">
+                      <div className="col-md-2 ">
+                        <div
+                          className="placeholder"
+                          style={{
+                            borderRadius: "30%",
+                            height: "50px",
+                            width: "50px",
+                          }}
+                        />
+                      </div>
+                      <div className="col-md-2">
+                        <h6 className=" fw-semibold">Username</h6>
+                        <p className="placeholder">Kamran Creation</p>
+                      </div>
+                      <div className="col-md-3">
+                        <h6 className=" fw-semibold">Mobile Number</h6>
+                        <p className="placeholder">Kamran Creation</p>
+                      </div>
+                      <div className="col-md-3">
+                        <h6 className=" fw-semibold">Email</h6>
+                        <p className="placeholder">Kamran Creation </p>
+                      </div>
+                      <div className="col-md-2">
+                        <h6 className=" fw-semibold">Question List</h6>
+                        <button
+                          className="btn btn-primary placeholder"
+                          type="button"
+                          disabled
+                        >
+                          <i className="ti ti-arrow-down"> </i>
+                        </button>
+                      </div>
+                    </div>
                   </div>
-                  <div className="col-md-2">
-                    <h6 className=" fw-semibold">Username</h6>
-                    <p>Kamran Creation</p>
-                  </div>
-                  <div className="col-md-3">
-                    <h6 className=" fw-semibold">Mobile Number</h6>
-                    <p>Kamran Creation</p>
-                  </div>
-                  <div className="col-md-3">
-                    <h6 className=" fw-semibold">Email</h6>
-                    <p>Kamran Creation </p>
-                  </div>
-                  <div className="col-md-2">
-                    <h6 className=" fw-semibold">Question List</h6>
-                    <button
-                      className="btn btn-primary"
-                      type="button"
-                      data-bs-toggle="collapse"
-                      data-bs-target="#collapseExample"
-                      aria-expanded="false"
-                      aria-controls="collapseExample"
-                    >
-                     <i className="ti ti-arrow-down"> </i>
-                    </button>
-                  </div>
-            
                 </div>
               </div>
             </div>
-
-            <div className="collapse" id="collapseExample">
-                    <div className="card card-body">
-                      Some placeholder content for the collapse component. This
-                      panel is hidden by default but revealed when the user
-                      activates the relevant trigger.
+          ))
+        : paginatedUsers.map((user, index) => (
+            <div key={index} className="row align-items-center">
+              <div className="col-md-1">{index + 1}</div>
+              <div className="col-md-11">
+                <div className="card">
+                  <div className="card-body">
+                    <div className="row">
+                      <div className="col-md-2">
+                        <img
+                          src={user?.pic}
+                          alt=""
+                          height={50}
+                          width={50}
+                          style={{ borderRadius: "30%" }}
+                        />
+                      </div>
+                      <div className="col-md-2">
+                        <h6 className=" fw-semibold">Username</h6>
+                        <p>Kamran Creation</p>
+                      </div>
+                      <div className="col-md-3">
+                        <h6 className=" fw-semibold">Mobile Number</h6>
+                        <p>Kamran Creation</p>
+                      </div>
+                      <div className="col-md-3">
+                        <h6 className=" fw-semibold">Email</h6>
+                        <p>Kamran Creation </p>
+                      </div>
+                      <div className="col-md-2">
+                        <h6 className=" fw-semibold">Question List</h6>
+                        <button
+                          className="btn btn-primary"
+                          type="button"
+                          data-bs-toggle="collapse"
+                          data-bs-target={`#${user.id}`}
+                          aria-expanded="false"
+                          aria-controls="collapseExample"
+                        >
+                          <i className="ti ti-arrow-down"> </i>
+                        </button>
+                      </div>
                     </div>
                   </div>
-          </div>
-        </div>
-      ))}
+                </div>
+
+                <div className="collapse" id={user.id}>
+                  <div className="card card-body">
+                    <p>
+                      <b>Question 1:</b> {user["Question 1"]}
+                    </p>
+                    <p>
+                      <b>Answer 1:</b> {user["Answer 1"]}
+                    </p>
+                    <br></br>
+                    <p>
+                      <b>Question 2:</b> {user["Question 2"]}
+                    </p>
+                    <p>
+                      <b>Answer 2:</b> {user["Answer 2"]}
+                    </p>
+                    <br></br>
+                    <p>
+                      <b>Question 3:</b> {user["Question 3"]}
+                    </p>
+                    <p>
+                      <b>Answer 3:</b> {user["Answer 3"]}
+                    </p>
+                    <br></br>
+                    <p>
+                      <b>Question 4:</b> {user["Question 4"]}
+                    </p>
+                    <p>
+                      <b>Answer 4:</b> {user["Answer 4"]}
+                    </p>
+                    <br></br>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+      {/* Pagination Controls */}
+      {
+        !loading &&  <div className="d-flex justify-content-center mt-4">
+        <button onClick={() => handlePageChange(currentPage - 1)}>
+          Previous
+        </button>
+        <span className="mx-3 pt-2">{currentPage}</span>
+        <button onClick={() => handlePageChange(currentPage + 1)}>Next</button>
+      </div>
+      }
+     
     </>
   );
 }
