@@ -1,4 +1,10 @@
+import jwtDecode from "jwt-decode";
+import { useEffect, useState } from "react";
 export default function Topbar() {
+  const [ userInfo, setUserInfo ] = useState(null);
+  useEffect(() => { 
+    setUserInfo(jwtDecode(localStorage.getItem("token")))
+  }, []);
   return (
     <>
       <header className="app-header">
@@ -8,7 +14,7 @@ export default function Topbar() {
               <a
                 className="nav-link sidebartoggler nav-icon-hover"
                 id="headerCollapse"
-                href="javascript:void(0)"
+                href="#"
               >
                 <i className="ti ti-menu-2"></i>
               </a>
@@ -26,7 +32,7 @@ export default function Topbar() {
           >
             <ul className="navbar-nav flex-row ms-auto align-items-center justify-content-end">
               <a className="btn btn-primary">
-                Hello <b>Vinod</b>
+                Hello <b>{userInfo?.name || "User"}</b>
               </a>
               <li className="nav-item dropdown">
                 <a
@@ -70,12 +76,15 @@ export default function Topbar() {
                       <i className="ti ti-list-check fs-6"></i>
                       <p className="mb-0 fs-3">My Task</p>
                     </a>
-                    <a
-                      href="./authentication-login.html"
+                    <button
+                      onClick={() => {
+                        localStorage.clear("token");
+                        window.location.href = "/";
+                      }}
                       className="btn btn-outline-primary mx-3 mt-2 d-block"
                     >
                       Logout
-                    </a>
+                    </button>
                   </div>
                 </div>
               </li>

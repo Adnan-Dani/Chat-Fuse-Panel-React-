@@ -5,21 +5,28 @@ import ActiveUsers from "./pages/ActiveUsers/ActiveUsers";
 import Customers from "./pages/Customers/Customers";
 import Analytics from "./pages/Analytics/Analytics";
 import Questions from "./pages/Questions/Questions";
-
+import Login from './pages/login/Login';
+const NotFound = () => {
+  return (
+    <div className="text-center">
+      <h1>404 - Not Found</h1>
+      <p>The page you're looking for does not exist.</p>
+    </div>
+  );
+}
 function App() {
   return (
     <>
       <BrowserRouter>
-        <Sidebar>
           <Routes>
-            <Route index path="/" element={<Dashboard />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/users" element={<ActiveUsers />} />
-            <Route path="/customers" element={<Customers />} />
+            <Route index path="/" element={<Login />} />
+            <Route path="/dashboard" element={<Sidebar><Dashboard /></Sidebar>} />
+            <Route path="/users" element={<Sidebar><ActiveUsers /></Sidebar>} />
+            <Route path="/customers" element={<Sidebar><Customers /></Sidebar>} />
             <Route path="/analytics" element={<Analytics />} />
-            <Route path="/questions" element={<Questions />} /> 
+            <Route path="/questions" element={<Sidebar><Questions /></Sidebar>} />  
+            <Route path="/*" element={<NotFound />} />
           </Routes>
-        </Sidebar>
       </BrowserRouter>
     </>
   );
