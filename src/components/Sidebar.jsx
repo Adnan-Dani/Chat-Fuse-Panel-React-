@@ -89,10 +89,10 @@ export default function Sidebar({ children }) {
                 <div className="d-flex">
                   <div className="unlimited-access-title me-3">
                     <h6 className="fw-semibold fs-4 mb-6 text-dark w-85">
-                      Upgrade to pro
+                      New Admin
                     </h6>
                     <a className="btn btn-primary fs-2 fw-semibold lh-sm">
-                      Buy Pro
+                      Add
                     </a>
                   </div>
                   <div className="unlimited-access-img">
