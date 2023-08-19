@@ -7,17 +7,25 @@ export default function Questions() {
   const [recordsPerPage] = useState(10);
   const [loading, setLoading] = useState(false);
  
-
- 
-
   const totalPages = Math.ceil(users.length / recordsPerPage);
 
+  var cacheKey = "answers";
   const getList = () => {
     setLoading(true);
-    http.get("answers").then((res) => { 
-      setUsers(res.data || []);
+    const isCache = localStorage.getItem(cacheKey);
+
+    if(!isCache){
+      http.get(cacheKey).then((res) => { 
+        localStorage.setItem(cacheKey, JSON.stringify(res.data));
+        setUsers(res.data || []);
+        setLoading(false);
+      });
+    }else{
+      setUsers(JSON.parse(isCache))
       setLoading(false);
-    });
+
+    }
+   
   }; 
   useEffect(() => {
     

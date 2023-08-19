@@ -1,5 +1,6 @@
 {
-  "name": "vite-project",
+  "name": "chat-fuse",
+  "homepage": "https://chatfuseadmin.cypherchain.org/",
   "private": true,
   "version": "0.0.0",
   "type": "module",

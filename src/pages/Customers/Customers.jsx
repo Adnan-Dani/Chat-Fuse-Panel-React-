@@ -7,13 +7,21 @@ export default function Customers() {
   const [loading, setLoading] = useState(false);
 
   const totalPages = Math.ceil(users.length / recordsPerPage);
-
+  const cacheKey = "users";
   const getList = () => {
     setLoading(true);
-    http.get("users").then((res) => {
-      setUsers(res.data.users || []);
+    const isCache = localStorage.getItem(cacheKey);
+    if(!isCache){
+      http.get(cacheKey).then((res) => {
+        setUsers(res.data.users || []);
+        localStorage.setItem(cacheKey, JSON.stringify(res.data.users));
+        setLoading(false);
+      });
+    }else{
+      setUsers(JSON.parse(isCache));
       setLoading(false);
-    });
+    }
+   
   };
 
   useEffect(() => {
@@ -43,7 +51,7 @@ export default function Customers() {
       <div className="col-12 d-block pb-4">
           <h2 className=" fw-semibold">Customers Collection</h2>
           <p className=" fs-3 text-dark mt-n1 fw-normal ">
-            List of customers.{" "}
+            List of customers.{" "} 
           </p>
         </div>
         <div className="col-12">

@@ -2,7 +2,10 @@ import { Link, NavLink } from "react-router-dom";
 import Topbar from "./Topbar";
 import logo from "./../assets/logo.png";
 import PropTypes from "prop-types";
+import { useState } from "react"; 
 export default function Sidebar({ children }) {
+  // light-style layout-navbar-fixed layout-menu-fixed
+  // light-style layout-navbar-fixed layout-menu-fixed layout-menu-expanded
   const pages = [
     {
       label: "Dashboard",
@@ -40,10 +43,11 @@ export default function Sidebar({ children }) {
     //   redirect: "/settings",
     // },
   ];
+  const [ sideBarOpen , setSidebarOpen ] = useState(true);
   return (
     <>
       <div
-        className="page-wrapper"
+        className={`page-wrapper ${sideBarOpen ? "show-sidebar" : ""}`}
         id="main-wrapper"
         data-layout="vertical"
         data-navbarbg="skin6"
@@ -51,7 +55,7 @@ export default function Sidebar({ children }) {
         data-sidebar-position="fixed"
         data-header-position="fixed"
       >
-        <aside className="left-sidebar">
+        <aside className="left-sidebar ">
           <div>
             <div className="brand-logo d-flex align-items-center justify-content-between">
               <Link href={"/dashboard"} className="text-nowrap logo-img ">
@@ -61,7 +65,7 @@ export default function Sidebar({ children }) {
                 className="close-btn d-xl-none d-block sidebartoggler cursor-pointer"
                 id="sidebarCollapse"
               >
-                <i className="ti ti-x fs-8"></i>
+                <i onClick={()=> setSidebarOpen(!sideBarOpen)} className="ti ti-x fs-8"></i>
               </div>
             </div>
             <nav className="sidebar-nav scroll-sidebar" data-simplebar="">
@@ -89,18 +93,14 @@ export default function Sidebar({ children }) {
                 <div className="d-flex">
                   <div className="unlimited-access-title me-3">
                     <h6 className="fw-semibold fs-4 mb-6 text-dark w-85">
-                      New Admin
+                      Anything
                     </h6>
                     <a className="btn btn-primary fs-2 fw-semibold lh-sm">
-                      Add
+                      Button
                     </a>
                   </div>
                   <div className="unlimited-access-img">
-                    <img
-                      src="../assets/images/backgrounds/rocket.png"
-                      alt=""
-                      className="img-fluid"
-                    />
+                     
                   </div>
                 </div>
               </div>
@@ -108,7 +108,7 @@ export default function Sidebar({ children }) {
           </div>
         </aside>
         <div className="body-wrapper">
-          <Topbar />
+          <Topbar sideBarOpen={sideBarOpen}   setSidebarOpen={setSidebarOpen} />
           <div className="container">
             {children}
             <div className="py-6 px-6 text-center">
