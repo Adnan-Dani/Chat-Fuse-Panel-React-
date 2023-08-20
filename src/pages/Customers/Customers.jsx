@@ -11,17 +11,16 @@ export default function Customers() {
   const getList = () => {
     setLoading(true);
     const isCache = localStorage.getItem(cacheKey);
-    if(!isCache){
+    if (!isCache) {
       http.get(cacheKey).then((res) => {
         setUsers(res.data.users || []);
         localStorage.setItem(cacheKey, JSON.stringify(res.data.users));
         setLoading(false);
       });
-    }else{
+    } else {
       setUsers(JSON.parse(isCache));
       setLoading(false);
     }
-   
   };
 
   useEffect(() => {
@@ -48,11 +47,18 @@ export default function Customers() {
         </div>
       </div>
       <div className="row mx-2">
-      <div className="col-12 d-block pb-4">
-          <h2 className=" fw-semibold">Customers Collection</h2>
-          <p className=" fs-3 text-dark mt-n1 fw-normal ">
-            List of customers.{" "} 
-          </p>
+        <div className="col-12 d-block pb-4">
+          <div className="d-flex justify-content-between px-3">
+            <div>
+              <h2 className=" fw-semibold">Customers Collection</h2>
+              <p className=" fs-3 text-dark mt-n1 fw-normal ">
+                List of customers.{" "}
+              </p>
+            </div>
+            <div>
+             <button onClick={()=> {localStorage.removeItem(cacheKey);getList()}} className="btn btn-info">Clear Cache</button>
+            </div>
+          </div>
         </div>
         <div className="col-12">
           <div className="card w-100">
@@ -91,7 +97,7 @@ export default function Customers() {
                           </td>
                           <td className="border-bottom-0">
                             <h6 className="fw-semibold mb-1 placeholder">
-                            Username Username 
+                              Username Username
                             </h6>
                           </td>
                           <td className="border-bottom-0">
@@ -109,9 +115,9 @@ export default function Customers() {
                             <td>No users active</td>
                           </tr>
                         ) : (
-                          paginatedUsers.map((user, index) => (
+                          paginatedUsers.map((user ) => (
                             <>
-                              <tr key={index}>
+                              <tr key={user.id}>
                                 <td className="border-bottom-0">
                                   <img
                                     src={user.profile}

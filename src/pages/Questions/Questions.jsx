@@ -51,8 +51,15 @@ export default function Questions() {
       </div>
       <div className="row">
         <div className="col-12 pb-4">
-          <h2 className=" fw-semibold">Question Collections</h2>
+        <div className="d-flex justify-content-between px-3">
+            <div>
+            <h2 className=" fw-semibold">Question Collections</h2>
           <p>List of all questions.</p>
+            </div>
+            <div>
+             <button onClick={()=> {localStorage.removeItem(cacheKey);getList()}} className="btn btn-info">Clear Cache</button>
+            </div>
+          </div>
         </div>
         <div className="col-12">
           {loading
