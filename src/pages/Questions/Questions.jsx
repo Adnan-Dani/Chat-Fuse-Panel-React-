@@ -1,46 +1,130 @@
-import { useEffect,   useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import http from "./../../services/HttpService";
+import moment from "moment";
+import Table from "../../components/Table";
+import Button from "../../components/Button";
+import ExportToExcel from "../../components/ExportToExcel";
+import { Box } from "@mui/material";
 
 export default function Questions() {
   const [users, setUsers] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [recordsPerPage] = useState(10);
   const [loading, setLoading] = useState(false);
- 
+
   const totalPages = Math.ceil(users.length / recordsPerPage);
 
-  var cacheKey = "answers";
+  const cacheKey = "answers";
+  const columns = useMemo(
+    () => [
+      {
+        accessorKey: "profile",
+        size: 50,
+        header: "User Profile",
+        Cell: ({ renderedCellValue, row }) => (
+          <img
+            src={renderedCellValue}
+            alt="profile"
+            loading="lazy"
+            height={50}
+            width={50}
+            style={{ borderRadius: "30%" }}
+          />
+        ),
+      },
+      {
+        accessorKey: "name",
+        header: "Name",
+        size: 50,
+        Cell: ({ renderedCellValue, row }) =>
+          renderedCellValue ? renderedCellValue : "Not Found",
+      },
+      {
+        accessorKey: "email",
+        header: "Email",
+        size: 50,
+        Cell: ({ renderedCellValue, row }) =>
+          renderedCellValue ? renderedCellValue : "Not Found",
+      },
+    ],
+    []
+  );
   const getList = () => {
+    setUsers([]);
     setLoading(true);
     const isCache = localStorage.getItem(cacheKey);
 
-    if(!isCache){
-      http.get(cacheKey).then((res) => { 
-        localStorage.setItem(cacheKey, JSON.stringify(res.data));
-        setUsers(res.data || []);
+    if (!isCache) {
+      http.get(cacheKey).then((res) => {
+        console.log(res.data[0].userInfo);
+        const resp = res.data.map((d) => ({
+          id: d.id,
+          name: d.userInfo ? d.userInfo.name : "N/A",
+          email: d.userInfo ? d.userInfo.email : "N/A",
+          profile: d.userInfo ? d.userInfo.profile : "N/A",
+          question1: d["Question 1"],
+          question2: d["Question 2"],
+          question3: d["Question 3"],
+          question4: d["Question 4"],
+          answer1: d["Answer 1"],
+          answer2: d["Answer 2"],
+          answer3: d["Answer 3"],
+          answer4: d["Answer 4"],
+        }));
+        localStorage.setItem(cacheKey, JSON.stringify(resp));
+        setUsers(resp || []);
         setLoading(false);
       });
-    }else{
-      setUsers(JSON.parse(isCache))
+    } else {
+      setUsers(JSON.parse(isCache));
       setLoading(false);
-
-    }
-   
-  }; 
-  useEffect(() => {
-    
-    getList();
-  }, []);
-  const paginatedUsers = users.slice(
-    (currentPage - 1) * recordsPerPage,
-    currentPage * recordsPerPage
-  );
-
-  const handlePageChange = (newPage) => {
-    if (newPage >= 1 && newPage <= totalPages) {
-      setCurrentPage(newPage);
     }
   };
+  useEffect(() => {
+    getList();
+  }, []);
+  const handleExportRows = (rows) => {
+    const data = rows.map((row) => row.original);
+    const excelRows = [
+      [
+        "Name",
+        "Email",
+        "Question 1",
+        "Answer 1",
+        "Question 2",
+        "Answer 2",
+        "Question 3",
+        "Answer 3",
+        "Question 4",
+        "Answer 4",
+      ],
+      ...data.map((item) => [
+        item.name,
+        item.email,
+        item.question1,
+        item.answer1,
+        item.question2,
+        item.answer2,
+        item.question3,
+        item.answer3,
+        item.question4,
+        item.answer4,
+      ]),
+    ];
+    ExportToExcel(excelRows);
+  };
+
+  const renderTopToolbarCustomActions = ({ table }) => (
+    <Box sx={{ display: "flex", gap: "1rem", p: "0.5rem", flexWrap: "wrap" }}>
+      <Button
+        disabled={table.getPrePaginationRowModel().rows.length === 0}
+        //export all rows, including from the next page, (still respects filtering and sorting)
+        onClick={() => handleExportRows(table.getPrePaginationRowModel().rows)}
+        title={`Export`}
+      />
+    </Box>
+  );
+
   return (
     <>
       <div className="row ">
@@ -51,147 +135,34 @@ export default function Questions() {
       </div>
       <div className="row">
         <div className="col-12 pb-4">
-        <div className="d-flex justify-content-between px-3">
+          <div className="d-flex justify-content-between px-3">
             <div>
-            <h2 className=" fw-semibold">Question Collections</h2>
-          <p>List of all questions.</p>
+              <h2 className=" fw-semibold">Question Collections</h2>
+              <p>List of all questions.</p>
             </div>
             <div>
-             <button onClick={()=> {localStorage.removeItem(cacheKey);getList()}} className="btn btn-info">Clear Cache</button>
+              <Button
+                onClick={() => {
+                  localStorage.removeItem(cacheKey);
+                  getList();
+                }}
+                title="Clear Cache"
+              />
             </div>
           </div>
         </div>
         <div className="col-12">
-          {loading
-            ? [1, 3, 4, 5, 6, 7].map((item, index) => (
-                <div key={index} className="row align-items-center">
-                  <div className="col-md-1">{index + 1}</div>
-                  <div className="col-md-11">
-                    <div className="card">
-                      <div className="card-body">
-                        <div className="row placeholder-glow">
-                          <div className="col-md-2 ">
-                            <div
-                              className="placeholder"
-                              style={{
-                                borderRadius: "30%",
-                                height: "50px",
-                                width: "50px",
-                              }}
-                            />
-                          </div>
-                          <div className="col-md-2">
-                            <h6 className=" fw-semibold">Username</h6>
-                            <p className="placeholder">Kamran Creation</p>
-                          </div> 
-                          <div className="col-md-5">
-                            <h6 className=" fw-semibold">Email</h6>
-                            <p className="placeholder">Kamran Creation Kamran Creation </p>
-                          </div>
-                          <div className="col-md-2">
-                            <h6 className=" fw-semibold">Question List</h6>
-                            <button
-                              className="btn btn-primary placeholder"
-                              type="button"
-                              disabled
-                            >
-                              <i className="ti ti-arrow-down"> </i>
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              ))
-            : paginatedUsers.map((user, index) => (
-                <div key={index} className="row align-items-center">
-                  <div className="col-md-1">{index + 1}</div>
-                  <div className="col-md-11">
-                    <div className="card">
-                      <div className="card-body">
-                        <div className="row">
-                          <div className="col-md-2">
-                            <img
-                              src={user.userInfo?.profile}
-                              alt=""
-                              height={50}
-                              width={50}
-                              style={{ borderRadius: "30%" }}
-                            />
-                          </div>
-                          <div className="col-md-2">
-                            <h6 className=" fw-semibold">Username</h6>
-                            <p>{user.userInfo?.name}</p>
-                          </div> 
-                          <div className="col-md-5">
-                            <h6 className=" fw-semibold">Email</h6>
-                            <p>{user.userInfo?.email}</p>
-                          </div>
-                          <div className="col-md-2">
-                            <h6 className=" fw-semibold">Question List</h6>
-                            <button
-                              className="btn btn-primary"
-                              type="button"
-                              data-bs-toggle="collapse"
-                              data-bs-target={`#${user.id}`}
-                              aria-expanded="false"
-                              aria-controls="collapseExample"
-                            >
-                              <i className="ti ti-arrow-down"> </i>
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="collapse" id={user.id}>
-                      <div className="card card-body">
-                        <p>
-                          <b>Question 1:</b> {user["Question 1"]}
-                        </p>
-                        <p>
-                          <b>Answer 1:</b> {user["Answer 1"]}
-                        </p>
-                        <br></br>
-                        <p>
-                          <b>Question 2:</b> {user["Question 2"]}
-                        </p>
-                        <p>
-                          <b>Answer 2:</b> {user["Answer 2"]}
-                        </p>
-                        <br></br>
-                        <p>
-                          <b>Question 3:</b> {user["Question 3"]}
-                        </p>
-                        <p>
-                          <b>Answer 3:</b> {user["Answer 3"]}
-                        </p>
-                        <br></br>
-                        <p>
-                          <b>Question 4:</b> {user["Question 4"]}
-                        </p>
-                        <p>
-                          <b>Answer 4:</b> {user["Answer 4"]}
-                        </p>
-                        <br></br>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              ))}
-          {/* Pagination Controls */}
-          {!loading && (
-            <div className="d-flex justify-content-center mt-4">
-              <button onClick={() => handlePageChange(currentPage - 1)}>
-                Previous
-              </button>
-              <span className="mx-3 pt-2">{currentPage}</span>
-              <button onClick={() => handlePageChange(currentPage + 1)}>
-                Next
-              </button>
+          <div className="card w-100">
+            <div className="card-body p-4">
+              <div className="table-responsive">
+                <Table
+                  columns={columns}
+                  data={users}
+                  renderTopToolbarCustomActions={renderTopToolbarCustomActions}
+                />
+              </div>
             </div>
-          )}
+          </div>
         </div>
       </div>
     </>

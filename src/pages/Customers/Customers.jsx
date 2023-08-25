@@ -57,7 +57,8 @@ export default function Customers() {
         Cell: ({ renderedCellValue, row }) => (
           <img
             src={renderedCellValue}
-            alt=""
+            alt="profile"
+            loading="lazy"
             height={50}
             width={50}
             style={{ borderRadius: "30%" }}
