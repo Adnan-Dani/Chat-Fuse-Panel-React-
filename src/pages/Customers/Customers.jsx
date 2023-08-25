@@ -1,20 +1,20 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import http from "./../../services/HttpService";
+import Table from "../../components/Table";
+import { Box } from "@mui/material"; 
+import moment from "moment/moment";
+import Button from "./../../components/Button";
 export default function Customers() {
   const [users, setUsers] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [recordsPerPage] = useState(10);
-  const [loading, setLoading] = useState(false);
-
-  const totalPages = Math.ceil(users.length / recordsPerPage);
+  const [loading, setLoading] = useState(false); 
   const cacheKey = "users";
   const getList = () => {
     setLoading(true);
     const isCache = localStorage.getItem(cacheKey);
     if (!isCache) {
       http.get(cacheKey).then((res) => {
-        setUsers(res.data.users || []);
-        localStorage.setItem(cacheKey, JSON.stringify(res.data.users));
+        setUsers(res.data || []);
+        localStorage.setItem(cacheKey, JSON.stringify(res.data || []));
         setLoading(false);
       });
     } else {
@@ -26,16 +26,104 @@ export default function Customers() {
   useEffect(() => {
     getList();
   }, []);
-  const paginatedUsers = users.slice(
-    (currentPage - 1) * recordsPerPage,
-    currentPage * recordsPerPage
-  );
 
-  const handlePageChange = (newPage) => {
-    if (newPage >= 1 && newPage <= totalPages) {
-      setCurrentPage(newPage);
-    }
+  const exportToExcel = (d) => {
+    const sheetData = d.map(item => ({
+      Name: item.name,
+      Email: item.email,
+      CreationTime: item.creationTime,
+    }));
+ 
+    var headers = [
+      { label: 'Name', field: 'name' },
+      { label: 'Email', field: 'email' },
+      { label: 'CreationTime', field: 'creationTime' }
+  ]
+     // set replacement values (optional)
+    //  toExcel.setReplace('Item 1 ', 'Item 1')
+
+     toExcel.exportXLS(headers, sheetData, 'users');
   };
+  const handleExportRows = (rows) => {
+    const data = rows.map((row) => row.original);
+    exportToExcel(data);
+  };
+
+  const handleExportData = () => {
+    exportToExcel(users);
+  }; 
+  const renderTopToolbarCustomActions = ({ table }) => (
+    <Box
+      sx={{ display: 'flex', gap: '1rem', p: '0.5rem', flexWrap: 'wrap' }}
+    >
+      <Button
+        color="primary"
+        //export all data that is currently in the table (ignore pagination, sorting, filtering, etc.)
+        onClick={()=> handleExportData(table)}
+        title={`Export All Data`}
+      >
+
+      </Button>
+      <Button
+        disabled={table.getPrePaginationRowModel().rows.length === 0}
+        //export all rows, including from the next page, (still respects filtering and sorting)
+        onClick={() =>
+          handleExportRows(table.getPrePaginationRowModel().rows)
+        }
+        title={`Export All Rows`}
+      >
+      </Button>
+      <Button
+        disabled={table.getRowModel().rows.length === 0}
+        //export all rows as seen on the screen (respects pagination, sorting, filtering, etc.)
+        onClick={() => handleExportRows(table.getRowModel().rows)}
+        title={`Export Page Rows`}
+      >
+      </Button>
+    </Box>
+  );
+  const columns = useMemo(
+    () => [
+      {
+        accessorKey: "profile",
+        size: 50,
+        header: "User Profile",
+        Cell: ({ renderedCellValue, row }) => (
+          <img
+            src={renderedCellValue}
+            alt=""
+            height={50}
+            width={50}
+            style={{ borderRadius: "30%" }}
+          />
+        ),
+      },
+      {
+        accessorKey: "name",
+        header: "Name",
+        size: 50,
+        Cell: ({ renderedCellValue, row }) =>
+          renderedCellValue ? renderedCellValue : "Not Found",
+      },
+      {
+        accessorKey: "email",
+        header: "Email",
+        size: 50,
+        Cell: ({ renderedCellValue, row }) =>
+          renderedCellValue ? renderedCellValue : "Not Found",
+      },
+      {
+        accessorKey: "creationTime",
+        header: "Creation Time",
+        size: 50,
+        Cell: ({ renderedCellValue, row }) =>
+          renderedCellValue
+            ? moment(renderedCellValue).format("MMM Do YY")
+            : "Not Found",
+      },
+    ],
+    []
+  );
   return (
     <>
       <div className="row ">
@@ -56,7 +144,15 @@ export default function Customers() {
               </p>
             </div>
             <div>
-             <button onClick={()=> {localStorage.removeItem(cacheKey);getList()}} className="btn btn-info">Clear Cache</button>
+              <button
+                onClick={() => {
+                  localStorage.removeItem(cacheKey);
+                  getList();
+                }}
+                className="btn btn-info"
+              >
+                Clear Cache
+              </button>
             </div>
           </div>
         </div>
@@ -64,95 +160,11 @@ export default function Customers() {
           <div className="card w-100">
             <div className="card-body p-4">
               <div className="table-responsive">
-                <table
-                  className="table text-nowrap mb-0 align-middle table-hover"
-                  style={{ tableLayout: "fixed" }}
-                >
-                  <thead className="text-dark fs-4">
-                    <tr>
-                      <th className="border-bottom-0">
-                        <h6 className="fw-semibold mb-0">Profile</h6>
-                      </th>
-                      <th className="border-bottom-0">
-                        <h6 className="fw-semibold mb-0">Name</h6>
-                      </th>
-                      <th className="border-bottom-0">
-                        <h6 className="fw-semibold mb-0">Email</h6>
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {loading ? (
-                      [1, 3, 4, 5, 6, 7, 8, 9].map((item, index) => (
-                        <tr key={index} className="placeholder-glow">
-                          <td className="border-bottom-0">
-                            <div
-                              className="placeholder"
-                              style={{
-                                borderRadius: "30%",
-                                height: "50px",
-                                width: "50px",
-                              }}
-                            />
-                          </td>
-                          <td className="border-bottom-0">
-                            <h6 className="fw-semibold mb-1 placeholder">
-                              Username Username
-                            </h6>
-                          </td>
-                          <td className="border-bottom-0">
-                            <p className="mb-0 fw-normal placeholder">
-                              mail@mail.com mail@mail.com mail@mail.com
-                            </p>
-                          </td>
-                        </tr>
-                      ))
-                    ) : (
-                      <>
-                        {paginatedUsers.length < 1 ? (
-                          <tr className="text-center">
-                            <td></td>
-                            <td>No users active</td>
-                          </tr>
-                        ) : (
-                          paginatedUsers.map((user ) => (
-                            <>
-                              <tr key={user.id}>
-                                <td className="border-bottom-0">
-                                  <img
-                                    src={user.profile}
-                                    alt=""
-                                    height={50}
-                                    width={50}
-                                    style={{ borderRadius: "30%" }}
-                                  />
-                                </td>
-                                <td className="border-bottom-0">
-                                  <h6 className="fw-semibold mb-1">
-                                    {user.name}
-                                  </h6>
-                                </td>
-                                <td className="border-bottom-0">
-                                  <p className="mb-0 fw-normal">{user.email}</p>
-                                </td>
-                              </tr>
-                            </>
-                          ))
-                        )}
-                      </>
-                    )}
-                  </tbody>
-                </table>
-                {/* Pagination Controls */}
-                <div className="d-flex justify-content-center mt-4">
-                  <button onClick={() => handlePageChange(currentPage - 1)}>
-                    Previous
-                  </button>
-                  <span className="mx-3 pt-2">{currentPage}</span>
-                  <button onClick={() => handlePageChange(currentPage + 1)}>
-                    Next
-                  </button>
-                </div>
+                <Table
+                  columns={columns}
+                  data={users}
+                  renderTopToolbarCustomActions={renderTopToolbarCustomActions}
+                />
               </div>
             </div>
           </div>
