@@ -1,12 +1,14 @@
 import { useEffect, useMemo, useState } from "react";
 import http from "./../../services/HttpService";
 import Table from "../../components/Table";
-import { Box } from "@mui/material"; 
+import { Box } from "@mui/material";
 import moment from "moment/moment";
 import Button from "./../../components/Button";
+import ExportToExcel from "../../components/ExportToExcel";
+
 export default function Customers() {
   const [users, setUsers] = useState([]);
-  const [loading, setLoading] = useState(false); 
+  const [loading, setLoading] = useState(false);
   const cacheKey = "users";
   const getList = () => {
     setLoading(true);
@@ -27,59 +29,23 @@ export default function Customers() {
     getList();
   }, []);
 
-  const exportToExcel = (d) => {
-    const sheetData = d.map(item => ({
-      Name: item.name,
-      Email: item.email,
-      CreationTime: item.creationTime,
-    }));
- 
-    var headers = [
-      { label: 'Name', field: 'name' },
-      { label: 'Email', field: 'email' },
-      { label: 'CreationTime', field: 'creationTime' }
-  ]
-     // set replacement values (optional)
-    //  toExcel.setReplace('Item 1 ', 'Item 1')
-
-     toExcel.exportXLS(headers, sheetData, 'users');
-  };
   const handleExportRows = (rows) => {
     const data = rows.map((row) => row.original);
-    exportToExcel(data);
+    const excelRows = [
+      ["Name", "Email", "CreationTime"],
+      ...data.map((item) => [item.name, item.email, item.creationTime]),
+    ];
+    ExportToExcel(excelRows);
   };
 
-  const handleExportData = () => {
-    exportToExcel(users);
-  }; 
   const renderTopToolbarCustomActions = ({ table }) => (
-    <Box
-      sx={{ display: 'flex', gap: '1rem', p: '0.5rem', flexWrap: 'wrap' }}
-    >
-      <Button
-        color="primary"
-        //export all data that is currently in the table (ignore pagination, sorting, filtering, etc.)
-        onClick={()=> handleExportData(table)}
-        title={`Export All Data`}
-      >
-
-      </Button>
+    <Box sx={{ display: "flex", gap: "1rem", p: "0.5rem", flexWrap: "wrap" }}>
       <Button
         disabled={table.getPrePaginationRowModel().rows.length === 0}
         //export all rows, including from the next page, (still respects filtering and sorting)
-        onClick={() =>
-          handleExportRows(table.getPrePaginationRowModel().rows)
-        }
-        title={`Export All Rows`}
-      >
-      </Button>
-      <Button
-        disabled={table.getRowModel().rows.length === 0}
-        //export all rows as seen on the screen (respects pagination, sorting, filtering, etc.)
-        onClick={() => handleExportRows(table.getRowModel().rows)}
-        title={`Export Page Rows`}
-      >
-      </Button>
+        onClick={() => handleExportRows(table.getPrePaginationRowModel().rows)}
+        title={`Export`}
+      />
     </Box>
   );
   const columns = useMemo(
