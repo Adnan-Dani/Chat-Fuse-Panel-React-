@@ -2,7 +2,7 @@ import { Link, NavLink } from "react-router-dom";
 import Topbar from "./Topbar";
 import logo from "./../assets/logo.png";
 import PropTypes from "prop-types";
-import { useState } from "react"; 
+import { useState } from "react";
 export default function Sidebar({ children }) {
   // light-style layout-navbar-fixed layout-menu-fixed
   // light-style layout-navbar-fixed layout-menu-fixed layout-menu-expanded
@@ -32,18 +32,8 @@ export default function Sidebar({ children }) {
       icon: "ti ti-template",
       redirect: "/questions",
     },
-    // {
-    //   label: "Messages",
-    //   icon: "ti ti-mail",
-    //   redirect: "/messages",
-    // },
-    // {
-    //   label: "Settings",
-    //   icon: "ti ti-adjustments-horizontal",
-    //   redirect: "/settings",
-    // },
   ];
-  const [ sideBarOpen , setSidebarOpen ] = useState(true);
+  const [sideBarOpen, setSidebarOpen] = useState(true);
   return (
     <>
       <div
@@ -65,7 +55,10 @@ export default function Sidebar({ children }) {
                 className="close-btn d-xl-none d-block sidebartoggler cursor-pointer"
                 id="sidebarCollapse"
               >
-                <i onClick={()=> setSidebarOpen(!sideBarOpen)} className="ti ti-x fs-8"></i>
+                <i
+                  onClick={() => setSidebarOpen(!sideBarOpen)}
+                  className="ti ti-x fs-8"
+                ></i>
               </div>
             </div>
             <nav className="sidebar-nav scroll-sidebar" data-simplebar="">
@@ -90,38 +83,28 @@ export default function Sidebar({ children }) {
                 ))}
               </ul>
               <div className="unlimited-access hide-menu bg-light-primary position-relative mb-7 mt-5 rounded">
-                <div className="d-flex">
-                  <div className="unlimited-access-title me-3">
-                    <h6 className="fw-semibold fs-4 mb-6 text-dark w-85">
-                      Anything
-                    </h6>
-                    <a className="btn btn-primary fs-2 fw-semibold lh-sm">
-                      Button
-                    </a>
-                  </div>
-                  <div className="unlimited-access-img">
-                     
-                  </div>
+                <div className=" title me-3">
+                  <h6 className="fw-semibold fs-4 mb-6 text-dark w-85">
+                    New Admin
+                  </h6>
+                  <button className="btn btn-primary fs-2 fw-semibold lh-sm">
+                    <i className="ti ti-plus"></i>
+                  </button>
                 </div>
               </div>
             </nav>
           </div>
         </aside>
         <div className="body-wrapper">
-          <Topbar sideBarOpen={sideBarOpen}   setSidebarOpen={setSidebarOpen} />
-          <div className="container">
-            {children}
-            <div className="py-6 px-6 text-center">
-              <p className="mb-0 fs-4">
-                Design and Developed by{" "}
-                <a
-                  href="#"
-                  className="pe-1 text-primary text-decoration-underline"
-                >
-                  Chat Fuse
-                </a>
-              </p>
-            </div>
+          <Topbar sideBarOpen={sideBarOpen} setSidebarOpen={setSidebarOpen} />
+          <div className="container content-wrapper">{children}</div>
+          <div className=" text-center">
+            <p className="mb-0 ">
+              Design and Developed by{" "}
+              <a href="#" className=" text-primary text-decoration-underline">
+                Chat Fuse
+              </a>
+            </p>
           </div>
         </div>
       </div>

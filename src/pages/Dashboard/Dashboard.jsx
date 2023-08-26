@@ -1,4 +1,4 @@
-import join from "./../../assets/images/icons/join.png"; 
+import join from "./../../assets/images/icons/join.png";
 import register from "./../../assets/images/icons/register.png";
 import active from "./../../assets/images/icons/active.png";
 import uninstall from "./../../assets/images/icons/uninstall.png";
@@ -72,58 +72,56 @@ export default function Dashboard() {
       },
     },
   };
-  const barSeries = [{
-    data: [21, 22, 10, 28, 16, 21, 13, 30]
-  }];
-  const colors =  [
-    'red',    // Monday
-    'blue',   // Tuesday
-    'green',  // Wednesday
-    'orange', // Thursday
-    'purple', // Friday
-    'brown',  // Saturday
-    'pink',   // Sunday
+  const barSeries = [
+    {
+      data: [21, 22, 10, 28, 16, 21, 13, 30],
+    },
+  ];
+  const colors = [
+    "red", // Monday
+    "blue", // Tuesday
+    "green", // Wednesday
+    "orange", // Thursday
+    "purple", // Friday
+    "brown", // Saturday
+    "pink", // Sunday
   ];
   const barOptions = {
     chart: {
       height: 300,
-      type: 'bar',
+      type: "bar",
     },
     plotOptions: {
       bar: {
-        columnWidth: '45%',
+        columnWidth: "45%",
         distributed: true,
-      }
+      },
     },
     dataLabels: {
-      enabled: false
+      enabled: false,
     },
     legend: {
-      show: false
+      show: false,
     },
     colors: colors,
     xaxis: {
       categories: [
-        'Monday',
-        'Tuesday',
-        'Wednesday',
-        'Thursday',
-        'Friday',
-        'Saturday',
-        'Sunday',
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday",
+        "Sunday",
       ],
       labels: {
         style: {
-          fontSize: '12px',
-          colors: colors
-        }
-      }
+          fontSize: "12px",
+          colors: colors,
+        },
+      },
     },
-  
   };
-  
-
-  
 
   return (
     <>
@@ -139,7 +137,7 @@ export default function Dashboard() {
             <div className="card">
               <div className="card-body">
                 <div className="row py-2">
-                  <div className="col d-flex align-items-center justify-content-end">
+                  <div className="col d-flex align-items-center justify-content-end p-0 m-0">
                     <div
                       data-label="20%"
                       className="css-bar mb-0 css-bar-primary css-bar-20"
@@ -175,8 +173,12 @@ export default function Dashboard() {
                 <div></div>
               </div>
               <div>
-              <Chart options={barOptions} series={barSeries} type="bar" height={300} />
-
+                <Chart
+                  options={barOptions}
+                  series={barSeries}
+                  type="bar"
+                  height={300}
+                />
               </div>
             </div>
           </div>
@@ -187,7 +189,7 @@ export default function Dashboard() {
               <div className="card overflow-hidden">
                 <div className="card-body p-4">
                   <h5 className="card-title mb-9 fw-semibold">Installation</h5>
-                  <Chart options={options} series={series}  type="line" />
+                  <Chart options={options} series={series} type="line" />
                 </div>
               </div>
             </div>
@@ -202,11 +204,9 @@ export default function Dashboard() {
                 <div className="mb-3 mb-sm-0">
                   <h5 className="card-title fw-semibold">Customers Map</h5>
                 </div>
-            
               </div>
               <div id="chart">
-
-              <div id="card" className="row ">
+                <div id="card" className="row ">
                   <div className="col-md-6 text-center">
                     <RoundedChart
                       series={[89]}
@@ -217,7 +217,6 @@ export default function Dashboard() {
                   </div>
                   <div className="col-md-6 text-center">
                     <RoundedChart
-
                       // options={options}
                       label={"Installed"}
                       series={[45]}
@@ -230,9 +229,7 @@ export default function Dashboard() {
             </div>
           </div>
         </div>
-        
       </div>
-    
     </>
   );
 }
