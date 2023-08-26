@@ -8,11 +8,7 @@ import { Box } from "@mui/material";
 
 export default function Questions() {
   const [users, setUsers] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [recordsPerPage] = useState(10);
   const [loading, setLoading] = useState(false);
-
-  const totalPages = Math.ceil(users.length / recordsPerPage);
 
   const cacheKey = "answers";
   const columns = useMemo(
@@ -56,7 +52,6 @@ export default function Questions() {
 
     if (!isCache) {
       http.get(cacheKey).then((res) => {
-        console.log(res.data[0].userInfo);
         const resp = res.data.map((d) => ({
           id: d.id,
           name: d.userInfo ? d.userInfo.name : "N/A",
@@ -159,6 +154,38 @@ export default function Questions() {
                   columns={columns}
                   data={users}
                   renderTopToolbarCustomActions={renderTopToolbarCustomActions}
+                  renderDetailPanel={({ row }) => (
+                    <div className="card card-body">
+                      <p>
+                        <b>Question 1:</b> {row.original.question1}
+                      </p>
+                      <p>
+                        <b>Answer 1:</b> {row.original.answer1}
+                      </p>
+                      <br></br>
+                      <p>
+                        <b>Question 2:</b> {row.original.question2}
+                      </p>
+                      <p>
+                        <b>Answer 2:</b> {row.original.answer2}
+                      </p>
+                      <br></br>
+                      <p>
+                        <b>Question 3:</b> {row.original.question3}
+                      </p>
+                      <p>
+                        <b>Answer 3:</b> {row.original.answer3}
+                      </p>
+                      <br></br>
+                      <p>
+                        <b>Question 4:</b> {row.original.question4}
+                      </p>
+                      <p>
+                        <b>Answer 4:</b> {row.original.answer4}
+                      </p>
+                      <br></br>
+                    </div>
+                  )}
                 />
               </div>
             </div>

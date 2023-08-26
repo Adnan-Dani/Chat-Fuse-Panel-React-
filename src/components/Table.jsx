@@ -1,5 +1,5 @@
 import MaterialReactTable from "material-react-table";
-
+import { Box } from "@mui/material";
 const Table = ({
   title = "",
   columns = [],
