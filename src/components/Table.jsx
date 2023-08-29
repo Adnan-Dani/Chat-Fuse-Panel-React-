@@ -1,5 +1,5 @@
 import MaterialReactTable from "material-react-table";
-import { Box } from "@mui/material";
+import PropTypes from 'prop-types';
 const Table = ({
   title = "",
   columns = [],
@@ -27,7 +27,7 @@ const Table = ({
         sx: {
           tableLayout: "inherit",
         },
-      }}
+      }} 
       columns={columns}
       data={data}
       renderRowActions={RowActions}
@@ -56,5 +56,17 @@ const Table = ({
     />
   );
 };
-
+Table.propTypes = {
+  title : PropTypes.string,
+  columns: PropTypes.array,
+  data: PropTypes.array,
+  enableRowSelection: PropTypes.any,
+  RowActions: PropTypes.any,
+  enableSelectAll: PropTypes.bool,
+  renderTopToolbarCustomActions: PropTypes.any,
+  enablePagination: PropTypes.bool,
+  isLoading: PropTypes.bool,
+  renderDetailPanel: PropTypes.any,
+  positionActionsColumn: PropTypes.string,
+};
 export default Table;

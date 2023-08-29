@@ -153,35 +153,37 @@ export default function Questions() {
                 <Table
                   columns={columns}
                   data={users}
+                  isLoading={loading}
+
                   renderTopToolbarCustomActions={renderTopToolbarCustomActions}
                   renderDetailPanel={({ row }) => (
                     <div className="card card-body">
                       <p>
-                        <b>Question 1:</b> {row.original.question1}
+                        <b>Question 1:</b> {row.original.question1 ?? ""}
                       </p>
                       <p>
-                        <b>Answer 1:</b> {row.original.answer1}
-                      </p>
-                      <br></br>
-                      <p>
-                        <b>Question 2:</b> {row.original.question2}
-                      </p>
-                      <p>
-                        <b>Answer 2:</b> {row.original.answer2}
+                        <b>Answer 1:</b> {row.original.answer1 ?? ""}
                       </p>
                       <br></br>
                       <p>
-                        <b>Question 3:</b> {row.original.question3}
+                        <b>Question 2:</b> {row.original.question2 ?? ""}
                       </p>
                       <p>
-                        <b>Answer 3:</b> {row.original.answer3}
+                        <b>Answer 2:</b> {row.original.answer2 ?? ""}
                       </p>
                       <br></br>
                       <p>
-                        <b>Question 4:</b> {row.original.question4}
+                        <b>Question 3:</b> {row.original.question3 ?? ""}
                       </p>
                       <p>
-                        <b>Answer 4:</b> {row.original.answer4}
+                        <b>Answer 3:</b> {row.original.answer3 ?? ""}
+                      </p>
+                      <br></br>
+                      <p>
+                        <b>Question 4:</b> {row.original.question4 ?? ""}
+                      </p>
+                      <p>
+                        <b>Answer 4:</b> {row.original.answer4 ?? ""}
                       </p>
                       <br></br>
                     </div>

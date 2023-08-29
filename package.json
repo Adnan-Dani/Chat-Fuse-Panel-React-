@@ -17,6 +17,7 @@
     "@mui/material": "^5.14.6",
     "apexcharts": "^3.41.1",
     "axios": "^1.4.0",
+    "date-fns": "^2.30.0",
     "jwt-decode": "^3.1.2",
     "material-react-table": "^1.14.0",
     "moment": "^2.29.4",

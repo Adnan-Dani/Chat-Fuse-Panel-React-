@@ -18,7 +18,7 @@ export default function Sidebar({ children }) {
       redirect: "/users",
     },
     {
-      label: "Today Analytics",
+      label: "Weekly Analytics",
       icon: "ti ti-chart-infographic",
       redirect: "/analytics",
     },

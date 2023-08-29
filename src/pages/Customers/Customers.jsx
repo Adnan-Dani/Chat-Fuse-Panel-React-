@@ -111,15 +111,13 @@ export default function Customers() {
               </p>
             </div>
             <div>
-              <button
+            <Button
                 onClick={() => {
                   localStorage.removeItem(cacheKey);
                   getList();
                 }}
-                className="btn btn-info"
-              >
-                Clear Cache
-              </button>
+                title="Clear Cache"
+              />
             </div>
           </div>
         </div>
@@ -130,6 +128,7 @@ export default function Customers() {
                 <Table
                   columns={columns}
                   data={users}
+                  isLoading={loading}
                   renderTopToolbarCustomActions={renderTopToolbarCustomActions}
                 />
               </div>
