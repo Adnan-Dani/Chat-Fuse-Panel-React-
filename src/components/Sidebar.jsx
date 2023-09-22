@@ -3,9 +3,12 @@ import Topbar from "./Topbar";
 import logo from "./../assets/logo.png";
 import PropTypes from "prop-types";
 import { useState } from "react";
+import Button from "react-bootstrap/Button";
+import Modal from "react-bootstrap/Modal";
+import { enqueueSnackbar } from "notistack";
+import axios from "axios";
+
 export default function Sidebar({ children }) {
-  // light-style layout-navbar-fixed layout-menu-fixed
-  // light-style layout-navbar-fixed layout-menu-fixed layout-menu-expanded
   const pages = [
     {
       label: "Dashboard",
@@ -34,6 +37,51 @@ export default function Sidebar({ children }) {
     },
   ];
   const [sideBarOpen, setSidebarOpen] = useState(true);
+  const [show, setShow] = useState(false);
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+
+  //  New User
+  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    if (!email || !password) {
+      return enqueueSnackbar("Please enter both email and password.", {
+        variant: "info",
+      });
+    }
+    setLoading(true);
+    axios
+      .post(`${import.meta.env.VITE_APP_API_URL}user/register`, {
+        username,
+        email,
+        password,
+      })
+      .then((res) => {
+        setLoading(false);
+        console.log(res.status)
+        if (res.status === 200) { 
+          setUsername("");
+          setEmail("");
+          setPassword("");
+          setShow(false);
+          enqueueSnackbar(res.data || "Invalid error occured.", {
+            variant: "success",
+          });
+        }
+      })
+      .catch((err) => {
+        setLoading(false);
+        enqueueSnackbar(err.response.data || "Invalid error occured.", {
+          variant: "error",
+        });
+      });
+  };
   return (
     <>
       <div
@@ -86,10 +134,78 @@ export default function Sidebar({ children }) {
                 <div className=" title me-3">
                   <h6 className="fw-semibold fs-4 mb-6 text-dark w-85">
                     New Admin
-                  </h6>
-                  <button className="btn btn-primary fs-2 fw-semibold lh-sm">
+                  </h6>{" "}
+                  <button
+                    className="btn btn-primary fs-2 fw-semibold lh-sm"
+                    onClick={handleShow}
+                  >
                     <i className="ti ti-plus"></i>
                   </button>
+                  <Modal show={show} onHide={handleClose}>
+                    <Modal.Header closeButton>
+                      <Modal.Title>Add New User</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body> 
+                      <div className="mb-3">
+                          <label htmlFor="username" className="form-label">
+                            Username
+                          </label>
+                          <input
+                            type="text"
+                            className="form-control"
+                            id="username"
+                            placeholder="Enter your Username"
+                            value={username}
+                            onChange={(e) => setUsername(e.target.value)}
+                          />
+                        </div>
+                        <div className="mb-3">
+                          <label htmlFor="email" className="form-label">
+                            Email
+                          </label>
+                          <input
+                            type="text"
+                            className="form-control"
+                            id="email"
+                            placeholder="Enter your email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                          />
+                        </div>
+                        <div className="mb-3 form-password-toggle">
+                          <div className="d-flex justify-content-between">
+                            <label className="form-label" htmlFor="password">
+                              Password
+                            </label>
+                          </div>
+                          <div className="input-group input-group-merge">
+                            <input
+                              type="password"
+                              id="password"
+                              className="form-control"
+                              value={password}
+                              placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;"
+                              aria-describedby="password"
+                              onChange={(e) => setPassword(e.target.value)}
+                            />
+                          </div>
+                        </div>
+                        <div className="mb-3"></div>
+                         
+                    </Modal.Body>
+                    <Modal.Footer>
+                      <Button variant="secondary" onClick={handleClose}>
+                        Close
+                      </Button>
+                      <Button
+                        variant="primary"
+                        disabled={loading}
+                        onClick={ handleSubmit}
+                      >
+                        Add
+                      </Button>
+                    </Modal.Footer>
+                  </Modal>
                 </div>
               </div>
             </nav>
@@ -100,10 +216,9 @@ export default function Sidebar({ children }) {
           <div className="container content-wrapper">{children}</div>
           <div className=" text-center">
             <p className="mb-0 ">
-              Design and Developed by{" "}
-              <a href="#" className=" text-primary text-decoration-underline">
-                Chat Fuse
-              </a>
+              Design and Developed by <a href="https://kamrancreation.com/" target="_blank" rel="noreferrer" className=" text-primary text-decoration-underline">
+                Kamran Creation
+              </a>  
             </p>
           </div>
         </div>

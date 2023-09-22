@@ -28,16 +28,10 @@ export default function Analytics() {
   }, []);
 
   const dateCounts = {}; // Store user counts for each date
+ 
+ 
 
-  const currentDate = new Date();
-  const currentWeekStart = startOfWeek(currentDate);
-  const currentWeekEnd = endOfWeek(currentDate);
-  const filteredUsers = users.filter((user) => {
-    const creationDate = new Date(user.creationTime);
-    return creationDate >= currentWeekStart && creationDate <= currentWeekEnd;
-  });
-
-  filteredUsers.forEach((user) => {
+  users.forEach((user) => {
     const creationDate = new Date(user.creationTime);
     const formattedDate = creationDate.toISOString().split("T")[0]; // Format as YYYY-MM-DD
     dateCounts[formattedDate] = (dateCounts[formattedDate] || 0) + 1;

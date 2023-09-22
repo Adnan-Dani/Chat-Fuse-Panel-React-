@@ -1,148 +1,149 @@
-export default function ActiveUsers() {
-  const users = [
-    {
-      id: 1,
-      userName: "Adnan Khan",
-      email: "adnan@gmail.com",
-      pic: "https://images.pexels.com/photos/733872/pexels-photo-733872.jpeg?cs=srgb&dl=pexels-andrea-piacquadio-733872.jpg&fm=jpg",
-    },
-    {
-      id: 2,
-      userName: "John Doe",
-      email: "john.doe@example.com",
-      pic: "https://images.pexels.com/photos/733872/pexels-photo-733872.jpeg?cs=srgb&dl=pexels-andrea-piacquadio-733872.jpg&fm=jpg",
-    },
-    {
-      id: 3,
-      userName: "Jane Smith",
-      email: "jane.smith@example.com",
-      pic: "https://images.pexels.com/photos/733872/pexels-photo-733872.jpeg?cs=srgb&dl=pexels-andrea-piacquadio-733872.jpg&fm=jpg",
-    },
-    {
-      id: 4,
-      userName: "Michael Johnson",
-      email: "michael.johnson@example.com",
-      pic: "https://images.pexels.com/photos/733872/pexels-photo-733872.jpeg?cs=srgb&dl=pexels-andrea-piacquadio-733872.jpg&fm=jpg",
-    },
-    {
-      id: 5,
-      userName: "Emily Williams",
-      email: "emily.williams@example.com",
-      pic: "https://images.pexels.com/photos/733872/pexels-photo-733872.jpeg?cs=srgb&dl=pexels-andrea-piacquadio-733872.jpg&fm=jpg",
-    },
-    {
-      id: 6,
-      userName: "Robert Brown",
-      email: "robert.brown@example.com",
-      pic: "https://images.pexels.com/photos/733872/pexels-photo-733872.jpeg?cs=srgb&dl=pexels-andrea-piacquadio-733872.jpg&fm=jpg",
-    },
-    {
-      id: 7,
-      userName: "Sophia Lee",
-      email: "sophia.lee@example.com",
-      pic: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTdZSsRW8ahClgpWbdmk1wKCv_6d5ZNEf_kuZLEmarGpS7KAd8cHuXo9UPSJOy_EESmpu8&usqp=CAU",
-    },
-    {
-      id: 8,
-      userName: "William Garcia",
-      email: "william.garcia@example.com",
-      pic: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSnS1o3mO3S_Nkfw1WAGaRJ6KaOGgODpfoOsA&usqp=CAU",
-    },
-    {
-      id: 9,
-      userName: "Olivia Rodriguez",
-      email: "olivia.rodriguez@example.com",
-      pic: "https://images.pexels.com/photos/733872/pexels-photo-733872.jpeg?cs=srgb&dl=pexels-andrea-piacquadio-733872.jpg&fm=jpg",
-    },
-    {
-      id: 10,
-      userName: "James Martinez",
-      email: "james.martinez@example.com",
-      pic: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTh8fHByb2ZpbGV8ZW58MHx8MHx8fDA%3D&w=1000&q=80",
-    },
-  ];
+import { useEffect, useMemo, useState } from "react";
+import http from "./../../services/HttpService";
+import Table from "../../components/Table";
+import { Box } from "@mui/material";
+import moment from "moment/moment";
+import Button from "./../../components/Button";
+import ExportToExcel from "../../components/ExportToExcel";
+ 
+export default function Customers() {
+  const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const cacheKey = "users";
 
+
+  const filterData = (list)=>{
+    const currentTime = new Date();
+    const twentyFourHoursAgo = new Date(currentTime - 24  * 60 * 60 * 1000); // 24 hours ago in milliseconds
+  
+    const filteredUsers = list.filter((user) => {
+      const creationTime = new Date(user.lastSignInTime);
+      return creationTime > twentyFourHoursAgo;
+    });
+    console.log(filteredUsers)
+      return filteredUsers;
+  }
+  const getList = () => {
+    setLoading(true);
+    const isCache = localStorage.getItem(cacheKey);
+    if (!isCache) {
+      http.get(cacheKey).then((res) => {
+        setUsers(filterData(res.data) || []);
+        localStorage.setItem(cacheKey, JSON.stringify(res.data || []));
+        setLoading(false);
+      });
+    } else {
+      setUsers(filterData(JSON.parse(isCache)));
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    getList();
+  }, []);
+
+  const handleExportRows = (rows) => {
+    const data = rows.map((row) => row.original);
+    const excelRows = [
+      ["Name", "Email", "CreationTime"],
+      ...data.map((item) => [item.name, item.email, item.creationTime]),
+    ];
+    ExportToExcel(excelRows);
+  };
+
+  const renderTopToolbarCustomActions = ({ table }) => (
+    <Box sx={{ display: "flex", gap: "1rem", p: "0.5rem", flexWrap: "wrap" }}>
+      <Button
+        disabled={table.getPrePaginationRowModel().rows.length === 0}
+        //export all rows, including from the next page, (still respects filtering and sorting)
+        onClick={() => handleExportRows(table.getPrePaginationRowModel().rows)}
+        title={`Export`}
+      />
+    </Box>
+  );
+  const columns = useMemo(
+    () => [
+      {
+        accessorKey: "profile",
+        size: 50,
+        header: "User Profile",
+        Cell: ({ renderedCellValue, row }) => (
+          <img
+            src={renderedCellValue}
+            alt="profile"
+            loading="lazy"
+            height={50}
+            width={50}
+            style={{ borderRadius: "30%" }}
+          />
+        ),
+      },
+      {
+        accessorKey: "name",
+        header: "Name",
+        size: 50,
+        Cell: ({ renderedCellValue, row }) =>
+          renderedCellValue ? renderedCellValue : "Not Found",
+      },
+      {
+        accessorKey: "email",
+        header: "Email",
+        size: 50,
+        Cell: ({ renderedCellValue, row }) =>
+          renderedCellValue ? renderedCellValue : "Not Found",
+      },
+      {
+        accessorKey: "creationTime",
+        header: "Creation Time",
+        size: 50,
+        Cell: ({ renderedCellValue, row }) =>
+          renderedCellValue
+            ? moment(renderedCellValue).format("MMM Do YY")
+            : "Not Found",
+      },
+    ],
+    []
+  );
   return (
     <>
-      <div className="row">
-        <div className="col-12">
-          <div className="row">
-            <div className="col-12 pb-4">
-              <h2 className=" fw-semibold">Active Users</h2>
-              <p className=" fs-3 text-dark mt-n1 fw-normal">
-                List of active users.{" "}
-              </p>
+      <div className="row ">
+        <div className="col-12 d-block pb-4">
+          <h2 className=" fw-semibold">Active Users</h2>
+          <p className=" fs-3 text-dark mt-n1 fw-normal ">
+            List of active users in last 24 Hours.{" "}
+          </p>
+        </div>
+      </div>
+      <div className="row mx-2">
+        <div className="col-12 d-block pb-4">
+          <div className="d-flex justify-content-between px-3">
+          <div className="col-12 d-block pb-4">
+          <h2 className=" fw-semibold">Active Users</h2>
+          <p className=" fs-3 text-dark mt-n1 fw-normal ">
+            List of active users in last 24 Hours.{" "}
+          </p>
+        </div>
+            <div>
+            <Button
+                onClick={() => {
+                  localStorage.removeItem(cacheKey);
+                  getList();
+                }}
+                title="Clear Cache"
+              />
             </div>
           </div>
-          <div className="row">
-          <div className="col-12 pb-4">
-              <h2 className=" fw-semibold">Active Users</h2>
-              <p className=" fs-3 text-dark mt-n1 fw-normal">
-                List of active users.{" "}
-              </p>
-            </div>
-            <div className="col-12">
-              <div className="card w-100">
-                <div className="card-body p-4">
-                  <div className="table-responsive">
-                    <table
-                      className="table text-nowrap mb-0 align-middle table-hover"
-                      style={{ tableLayout: "fixed" }}
-                    >
-                      <thead className="text-dark fs-4">
-                        <tr>
-                          <th className="border-bottom-0">
-                            <h6 className="fw-semibold mb-0">Id</h6>
-                          </th>
-                          <th className="border-bottom-0">
-                            <h6 className="fw-semibold mb-0">Username</h6>
-                          </th>
-                          <th className="border-bottom-0">
-                            <h6 className="fw-semibold mb-0">Email</h6>
-                          </th>
-                          <th className="border-bottom-0">
-                            <h6 className="fw-semibold mb-0">Status</h6>
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {users.length < 1 ? (
-                           <tr className="text-center">
-                           <td></td>
-                           <td>No users active</td>
-                           </tr>
-                        ) : (
-                          users.map((user, index) => (
-                            <tr key={index}>
-                              <td className="border-bottom-0">
-                                <h6 className="fw-semibold mb-0">{user.id}</h6>
-                              </td>
-                              <td className="border-bottom-0">
-                                <div className="d-flex align-items-center">
-                                  <img src={user.pic} alt="" height={50} width={50} style={{ borderRadius:"50%" , marginRight:"4px" }} />
-                                  <h6 className="fw-semibold mb-1 pl-2">
-                                  {user.userName}
-                                </h6> 
-                                </div>
-                              </td>
-                              <td className="border-bottom-0">
-                                <p className="mb-0 fw-normal">{user.email}</p>
-                              </td>
-                              <td className="border-bottom-0">
-                                <div className="d-flex align-items-center gap-2">
-                                  <span className="badge bg-success rounded-3 fw-semibold">
-                                    active
-                                  </span>
-                                </div>
-                              </td>
-                               
-                            </tr>
-                          ))
-                        )}
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
+        </div>
+        <div className="col-12">
+          <div className="card w-100">
+            <div className="card-body p-4">
+              <div className="table-responsive">
+                <Table
+                  columns={columns}
+                  data={users}
+                  isLoading={loading}
+                  renderTopToolbarCustomActions={renderTopToolbarCustomActions}
+                />
               </div>
             </div>
           </div>
