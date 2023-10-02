@@ -10,11 +10,11 @@ import axios from "axios";
 
 export default function Sidebar({ children }) {
   const pages = [
-    {
-      label: "Dashboard",
-      icon: "ti ti-layout-dashboard",
-      redirect: "/dashboard",
-    },
+    // {
+    //   label: "Dashboard",
+    //   icon: "ti ti-layout-dashboard",
+    //   redirect: "/dashboard",
+    // },
     {
       label: "Active User",
       icon: "ti ti-user",
@@ -34,6 +34,11 @@ export default function Sidebar({ children }) {
       label: "Question Collection",
       icon: "ti ti-template",
       redirect: "/questions",
+    },
+    {
+      label: "Chat History",
+      icon: "ti ti-layout-dashboard",
+      redirect: "/history",
     },
   ];
   const [sideBarOpen, setSidebarOpen] = useState(true);

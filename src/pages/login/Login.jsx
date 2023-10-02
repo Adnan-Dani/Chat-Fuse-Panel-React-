@@ -24,10 +24,9 @@ export default function Login() {
       })
       .then((res) => {
         setLoading(false);
-        if (res.status === 200) {
-          console.log(res.data.token);
+        if (res.status === 200) { 
           localStorage.setItem("token", res.data.token);
-          window.location.href = "/dashboard";
+          window.location.href = "/users";
         }
       })
       .catch((err) => {

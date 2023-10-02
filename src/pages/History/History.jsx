@@ -1,11 +1,11 @@
 import { useEffect, useMemo, useState } from "react";
-import http from "./../../services/HttpService"; 
+import http from "../../services/HttpService";
 import Table from "../../components/Table";
 import Button from "../../components/Button";
 import ExportToExcel from "../../components/ExportToExcel";
 import { Box } from "@mui/material";
-
-export default function Questions() {
+import botPic from "./../../assets/images/bot.png";
+export default function History() {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -55,8 +55,8 @@ export default function Questions() {
           id: d.id,
           name: d.userInfo ? d.userInfo.name : "N/A",
           email: d.userInfo ? d.userInfo.email : "N/A",
-          profile: d.userInfo ? d.userInfo.profile : "N/A", 
-          ...d
+          profile: d.userInfo ? d.userInfo.profile : "N/A",
+          ...d,
         }));
         localStorage.setItem(cacheKey, JSON.stringify(resp));
         setUsers(resp || []);
@@ -66,7 +66,7 @@ export default function Questions() {
       setUsers(JSON.parse(isCache));
       setLoading(false);
     }
-  };
+  }; 
   useEffect(() => {
     getList();
   }, []);
@@ -75,27 +75,13 @@ export default function Questions() {
     const excelRows = [
       [
         "Name",
-        "Email",
-        "Question 1",
-        "Answer 1",
-        "Question 2",
-        "Answer 2",
-        "Question 3",
-        "Answer 3",
-        "Question 4",
-        "Answer 4",
+        "Email", 
+        "Message History", 
       ],
       ...data.map((item) => [
         item.name,
-        item.email,
-        item.question1,
-        item.answer1,
-        item.question2,
-        item.answer2,
-        item.question3,
-        item.answer3,
-        item.question4,
-        item.answer4,
+        item.email,  
+        item.history ? item.history.map((message) => message.text).join("\n") : '',
       ]),
     ];
     ExportToExcel(excelRows);
@@ -111,13 +97,20 @@ export default function Questions() {
       />
     </Box>
   );
-
+  function formatTime(timeData) {
+    const unixTimestamp = timeData._seconds;
+    const nanoseconds = timeData._nanoseconds / 1000000; // Convert nanoseconds to milliseconds
+    const milliseconds = unixTimestamp * 1000 + nanoseconds;
+    const date = new Date(milliseconds);
+    const formattedDate = date.toLocaleString();
+    return formattedDate;
+  }
   return (
     <>
       <div className="row ">
         <div className="col-12 pb-4">
-          <h2 className=" fw-semibold">Question Collections</h2>
-          <p>List of all questions.</p>
+          <h2 className=" fw-semibold">User Chat History</h2>
+          <p>List of all user chat history.</p>
         </div>
       </div>
       <div className="row">
@@ -147,34 +140,58 @@ export default function Questions() {
               renderTopToolbarCustomActions={renderTopToolbarCustomActions}
               renderDetailPanel={({ row }) => (
                 <div className="card card-body">
-                  <p>
-                    <b>Question 1:</b> {row.original.question1 ?? ""}
-                  </p>
-                  <p>
-                    <b>Answer 1:</b> {row.original.answer1 ?? ""}
-                  </p>
-                  <br></br>
-                  <p>
-                    <b>Question 2:</b> {row.original.question2 ?? ""}
-                  </p>
-                  <p>
-                    <b>Answer 2:</b> {row.original.answer2 ?? ""}
-                  </p>
-                  <br></br>
-                  <p>
-                    <b>Question 3:</b> {row.original.question3 ?? ""}
-                  </p>
-                  <p>
-                    <b>Answer 3:</b> {row.original.answer3 ?? ""}
-                  </p>
-                  <br></br>
-                  <p>
-                    <b>Question 4:</b> {row.original.question4 ?? ""}
-                  </p>
-                  <p>
-                    <b>Answer 4:</b> {row.original.answer4 ?? ""}
-                  </p>
-                  <br></br>
+                  {row.original.history.length == 0 && (
+                    <p>Chat History is empty.</p>
+                  )} 
+
+                  {row.original.history.map((chat, index) => (
+                    <div key={index}>
+                      {chat.type === "bot" ? (
+                      <div className="bot d-flex align-items-center" key={index}>
+                      <img
+                        src={botPic}
+                        height={50}
+                        width={50}
+                        style={{ borderRadius: "50%" }}
+                        alt="Bot"
+                      />
+                      <div className="pt-3">
+                        <div
+                          className="bot-text mx-2  p-2 rounded text-white"
+                          style={{ background: "gray" }}
+                        >
+                          {chat.text}
+                        </div>
+                        <div
+                          className="text-right ml-auto mx-3"
+                          style={{ textAlign: "right" }}
+                        >
+                          <small>{formatTime(chat.time)} </small>
+                        </div>
+                      </div>
+                    </div>
+                      ) : (
+                    /* User Msg */
+                    <div className="user d-flex align-items-center justify-content-end" key={index}>
+                    <div className="pt-3">
+                      <div className="bot-text mx-2 bg-primary p-2 rounded text-white">
+                        {chat.text}
+                      </div>
+                      <div className="text-right ml-auto mx-3">
+                        <small>{formatTime(chat.time)} </small>
+                      </div>
+                    </div>
+                    <img
+                      src={row.original.profile}
+                      height={50}
+                      width={50}
+                      style={{ borderRadius: "50%" }}
+                      alt="Bot"
+                    />
+                  </div>
+                      )}
+                    </div>
+                  ))}
                 </div>
               )}
             />

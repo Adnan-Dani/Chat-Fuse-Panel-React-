@@ -122,9 +122,7 @@ export default function Customers() {
           </div>
         </div>
         <div className="col-12">
-          <div className="card w-100">
-            <div className="card-body p-4">
-              <div className="table-responsive">
+        <div className="table-responsive">
                 <Table
                   columns={columns}
                   data={users}
@@ -132,8 +130,6 @@ export default function Customers() {
                   renderTopToolbarCustomActions={renderTopToolbarCustomActions}
                 />
               </div>
-            </div>
-          </div>
         </div>
       </div>
     </>

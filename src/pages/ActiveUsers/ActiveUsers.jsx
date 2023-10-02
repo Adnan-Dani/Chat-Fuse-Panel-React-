@@ -20,7 +20,7 @@ export default function Customers() {
       const creationTime = new Date(user.lastSignInTime);
       return creationTime > twentyFourHoursAgo;
     });
-    console.log(filteredUsers)
+    
       return filteredUsers;
   }
   const getList = () => {
@@ -114,15 +114,15 @@ export default function Customers() {
           </p>
         </div>
       </div>
-      <div className="row mx-2">
+      <div className="row mx-2"> 
         <div className="col-12 d-block pb-4">
           <div className="d-flex justify-content-between px-3">
-          <div className="col-12 d-block pb-4">
-          <h2 className=" fw-semibold">Active Users</h2>
+            <div>
+            <h2 className=" fw-semibold">Active Users</h2>
           <p className=" fs-3 text-dark mt-n1 fw-normal ">
             List of active users in last 24 Hours.{" "}
           </p>
-        </div>
+            </div>
             <div>
             <Button
                 onClick={() => {
@@ -135,9 +135,7 @@ export default function Customers() {
           </div>
         </div>
         <div className="col-12">
-          <div className="card w-100">
-            <div className="card-body p-4">
-              <div className="table-responsive">
+        <div className="table-responsive">
                 <Table
                   columns={columns}
                   data={users}
@@ -145,8 +143,6 @@ export default function Customers() {
                   renderTopToolbarCustomActions={renderTopToolbarCustomActions}
                 />
               </div>
-            </div>
-          </div>
         </div>
       </div>
     </>

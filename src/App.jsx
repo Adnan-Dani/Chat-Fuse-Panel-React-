@@ -1,12 +1,12 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import Sidebar from "./components/Sidebar";
-import Dashboard from "./pages/Dashboard/Dashboard";
+import Sidebar from "./components/Sidebar"; 
 import ActiveUsers from "./pages/ActiveUsers/ActiveUsers";
 import Customers from "./pages/Customers/Customers";
 import Analytics from "./pages/Analytics/Analytics";
 import Questions from "./pages/Questions/Questions";
 import Login from './pages/login/Login';
 import { SnackbarProvider } from "notistack";
+import History from "./pages/History/History";
 const NotFound = () => {
   return (
     <div className="text-center">
@@ -53,7 +53,7 @@ const PrivateRoute = ({ children }) => {
 const  LoginRoute = ({ children })=>{
   const token = localStorage.getItem("token");
   if(token){
-    window.location.href = "/dashboard";
+    window.location.href = "/users";
     return;
   }
   return children;
@@ -65,11 +65,12 @@ function App() {
       <BrowserRouter>
           <Routes>
             <Route index path="/" element={<LoginRoute><Login /></LoginRoute>} />
-            <Route path="/dashboard" element={<PrivateRoute><Sidebar><Dashboard /></Sidebar></PrivateRoute>} />
+            {/* <Route path="/dashboard" element={<PrivateRoute><Sidebar><Dashboard /></Sidebar></PrivateRoute>} /> */}
             <Route path="/users" element={<PrivateRoute><Sidebar><ActiveUsers /></Sidebar></PrivateRoute>} />
             <Route path="/customers" element={<PrivateRoute><Sidebar><Customers /></Sidebar></PrivateRoute>} />
             <Route path="/analytics" element={<PrivateRoute><Sidebar><Analytics /></Sidebar></PrivateRoute>} />
             <Route path="/questions" element={<PrivateRoute><Sidebar><Questions /></Sidebar></PrivateRoute>} />  
+            <Route path="/history" element={<PrivateRoute><Sidebar><History /></Sidebar></PrivateRoute>} />  
             <Route path="/*" element={<NotFound />} />
           </Routes>
       </BrowserRouter>
