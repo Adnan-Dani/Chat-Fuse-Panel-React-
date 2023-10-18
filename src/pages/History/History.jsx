@@ -6,6 +6,10 @@ import ExportToExcel from "../../components/ExportToExcel";
 import { Box } from "@mui/material";
 import botPic from "./../../assets/images/bot.png";
 import avatar from "./../../assets/images/user.png";
+import formatTime from "../../utils/formateTime";
+import sortByTime from "../../utils/sortByTime";
+import prettifyContent from "../../utils/prettifyContent";
+
 export default function History() {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -19,13 +23,6 @@ export default function History() {
         header: "User Profile",
         Cell: ({ renderedCellValue, row }) => (
           <img
-            //   src={renderedCellValue}
-            //   alt="profile"
-            //   loading="lazy"
-            //   height={50}
-            //   width={50}
-            //   style={{ borderRadius: "30%" }}
-            // />
             src={renderedCellValue}
             alt="profile"
             loading="lazy"
@@ -81,6 +78,7 @@ export default function History() {
   useEffect(() => {
     getList();
   }, []);
+
   const handleExportRows = (rows) => {
     const data = rows.map((row) => row.original);
     const excelRows = [
@@ -106,16 +104,9 @@ export default function History() {
       />
     </Box>
   );
-  function formatTime(timeData) {
-    const unixTimestamp = timeData._seconds;
-    const nanoseconds = timeData._nanoseconds / 1000000; // Convert nanoseconds to milliseconds
-    const milliseconds = unixTimestamp * 1000 + nanoseconds;
-    const date = new Date(milliseconds);
-    const formattedDate = date.toLocaleString();
-    return formattedDate;
-  }
-  const visibleUsers = users.filter((u) => u.history?.length > 0);
-  console.log(visibleUsers);
+
+  const visibleUsers = sortByTime(users.filter((u) => u.history?.length > 0));
+
   return (
     <>
       <div className="row ">
@@ -155,63 +146,70 @@ export default function History() {
                     <p>Chat History is empty.</p>
                   )}
 
-                  {row.original.history
-                    .slice()
-                    .reverse()
-                    .map((chat, index) => (
-                      <div key={index}>
-                        {chat.type === "bot" ? (
-                          <div
-                            className="bot d-flex align-items-center"
-                            key={index}
-                          >
-                            <img
-                              src={botPic}
-                              height={50}
-                              width={50}
-                              style={{ borderRadius: "50%" }}
-                              alt="Bot"
-                            />
-                            <div className="pt-3">
-                              <div
-                                className="bot-text mx-2  p-2 rounded text-white"
-                                style={{ background: "gray" }}
-                              >
-                                {chat.text}
-                              </div>
-                              <div
-                                className="text-right ml-auto mx-3"
-                                style={{ textAlign: "right" }}
-                              >
-                                <small>{formatTime(chat.time)} </small>
-                              </div>
+                  {row.original.history.map((chat, index) => (
+                    <div key={index}>
+                      {chat.type === "bot" ? (
+                        <div
+                          className="bot d-flex align-items-center"
+                          key={index}
+                        >
+                          <img
+                            src={botPic}
+                            height={50}
+                            width={50}
+                            style={{ borderRadius: "50%" }}
+                            alt="Bot"
+                          />
+                          <div className="pt-3">
+                            <div
+                              className="bot-text mx-2 p-2 rounded text-dark"
+                              style={{
+                                fontFamily: "monospace",
+                                whiteSpace: "pre-wrap",
+                                backgroundColor: "#F2F2F7",
+                                padding: "10px",
+                              }}
+                              dangerouslySetInnerHTML={prettifyContent(
+                                chat.text
+                              )}
+                            ></div>
+
+                            <div
+                              className="text-right ml-auto mx-3"
+                              style={{ textAlign: "right" }}
+                            >
+                              <small>{formatTime(chat.time)} </small>
                             </div>
                           </div>
-                        ) : (
-                          /* User Msg */
-                          <div
-                            className="user d-flex align-items-center justify-content-end"
-                            key={index}
-                          >
-                            <div className="pt-3">
-                              <div className="bot-text mx-2 bg-primary p-2 rounded text-white">
-                                {chat.text}
-                              </div>
-                              <div className="text-right ml-auto mx-3">
-                                <small>{formatTime(chat.time)} </small>
-                              </div>
+                        </div>
+                      ) : (
+                        /* User Msg */
+                        <div
+                          className="user d-flex align-items-center justify-content-end"
+                          key={index}
+                        >
+                          <div className="pt-3">
+                            <div
+                              className="bot-text mx-2 bg-primary p-2 rounded text-white"
+                              style={{ fontFamily: "monospace" }}
+                            >
+                              {chat.text}
                             </div>
-                            <img
-                              src={row.original.profile}
-                              height={50}
-                              width={50}
-                              style={{ borderRadius: "50%" }}
-                              alt="Bot"
-                            />
+                            <div className="text-right ml-auto mx-3">
+                              <small>{formatTime(chat.time)} </small>
+                            </div>
                           </div>
-                        )}
-                      </div>
-                    ))}
+                          <img
+                            src={row.original.profile}
+                            height={50}
+                            width={50}
+                            style={{ borderRadius: "50%" }}
+                            alt="Bot"
+                          />
+                        </div>
+                      )}
+                    </div>
+                  ))}
                 </div>
               )}
             />
