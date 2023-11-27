@@ -1,7 +1,7 @@
 import { format, parseISO, compareAsc } from "date-fns";
-function sortByTime(users) {
+function sortByTime(users = []) {
   const sortedUsers = users.map((user) => {
-    const sortedHistory = user.history.sort((a, b) => {
+    const sortedHistory = user.history?.sort((a, b) => {
       const timeA = parseISO(
         format(new Date(a.time._seconds * 1000), "yyyy-MM-dd'T'HH:mm:ss")
       );

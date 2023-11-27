@@ -1,20 +1,23 @@
-import { useEffect, useMemo, useState } from "react";
-import http from "../../services/HttpService";
+import { useMemo } from "react";
+
+// Custom Components
 import Table from "../../components/Table";
 import Button from "../../components/Button";
+
 import ExportToExcel from "../../components/ExportToExcel";
 import { Box } from "@mui/material";
 import botPic from "./../../assets/images/bot.png";
 import avatar from "./../../assets/images/user.png";
 import formatTime from "../../utils/formateTime";
-import sortByTime from "../../utils/sortByTime";
 import prettifyContent from "../../utils/prettifyContent";
+import QueryVariables from "../../constants";
+import { QueryClient } from "@tanstack/react-query";
+import useHistory from "../../hooks/useHistory";
 
 export default function History() {
-  const [users, setUsers] = useState([]);
-  const [loading, setLoading] = useState(false);
-
-  const cacheKey = "answers";
+  const queryClient = new QueryClient();
+  const { history, error, loading } = useHistory();
+  console.log(history);
   const columns = useMemo(
     () => [
       {
@@ -52,32 +55,6 @@ export default function History() {
     ],
     []
   );
-  const getList = () => {
-    setUsers([]);
-    setLoading(true);
-    const isCache = localStorage.getItem(cacheKey);
-
-    if (!isCache) {
-      http.get(cacheKey).then((res) => {
-        const resp = res.data.map((d) => ({
-          id: d.id,
-          name: d.userInfo ? d.userInfo.name : "N/A",
-          email: d.userInfo ? d.userInfo.email : "N/A",
-          profile: d.userInfo ? d.userInfo.profile : "N/A",
-          ...d,
-        }));
-        localStorage.setItem(cacheKey, JSON.stringify(resp));
-        setUsers(resp || []);
-        setLoading(false);
-      });
-    } else {
-      setUsers(JSON.parse(isCache));
-      setLoading(false);
-    }
-  };
-  useEffect(() => {
-    getList();
-  }, []);
 
   const handleExportRows = (rows) => {
     const data = rows.map((row) => row.original);
@@ -105,8 +82,6 @@ export default function History() {
     </Box>
   );
 
-  const visibleUsers = sortByTime(users.filter((u) => u.history?.length > 0));
-
   return (
     <>
       <div className="row ">
@@ -125,8 +100,9 @@ export default function History() {
             <div>
               <Button
                 onClick={() => {
-                  localStorage.removeItem(cacheKey);
-                  getList();
+                  queryClient.invalidateQueries({
+                    queryKey: [QueryVariables.USERS],
+                  });
                 }}
                 title="Clear Cache"
               />
@@ -134,19 +110,20 @@ export default function History() {
           </div>
         </div>
         <div className="col-12">
+          {error && <h6 className="mx-2">{error.message}</h6>}
           <div className="table-responsive">
             <Table
               columns={columns}
-              data={visibleUsers}
+              data={history}
               isLoading={loading}
               renderTopToolbarCustomActions={renderTopToolbarCustomActions}
               renderDetailPanel={({ row }) => (
                 <div className="card card-body">
-                  {row.original.history.length == 0 && (
+                  {row.original.history?.length == 0 && (
                     <p>Chat History is empty.</p>
                   )}
 
-                  {row.original.history.map((chat, index) => (
+                  {row.original.history?.map((chat, index) => (
                     <div key={index}>
                       {chat.type === "bot" ? (
                         <div
