@@ -125,7 +125,6 @@ export default function Questions() {
               renderTopToolbarCustomActions={renderTopToolbarCustomActions}
               renderDetailPanel={({ row }) => (
                 <div className="card card-body">
-                  {console.log(row.original)}
                   <p>
                     <b>Question 1:</b> {row.original["Question 1"] ?? ""}
                   </p>

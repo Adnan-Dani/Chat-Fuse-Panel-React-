@@ -1,37 +1,12 @@
-import  { useEffect, useState } from "react";
 import Chart from "react-apexcharts";
-import http from "./../../services/HttpService";
-import { startOfWeek, endOfWeek } from "date-fns"; 
+import useUsers from "../../hooks/useUsers";
 
 export default function Analytics() {
-  const [users, setUsers] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const cacheKey = "users";
-
-  const getList = () => {
-    setLoading(true);
-    const isCache = localStorage.getItem(cacheKey);
-    if (!isCache) {
-      http.get(cacheKey).then((res) => {
-        setUsers(res.data || []);
-        localStorage.setItem(cacheKey, JSON.stringify(res.data || []));
-        setLoading(false);
-      });
-    } else {
-      setUsers(JSON.parse(isCache));
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    getList();
-  }, []);
+  const { data } = useUsers();
 
   const dateCounts = {}; // Store user counts for each date
- 
- 
 
-  users.forEach((user) => {
+  data.forEach((user) => {
     const creationDate = new Date(user.creationTime);
     const formattedDate = creationDate.toISOString().split("T")[0]; // Format as YYYY-MM-DD
     dateCounts[formattedDate] = (dateCounts[formattedDate] || 0) + 1;
