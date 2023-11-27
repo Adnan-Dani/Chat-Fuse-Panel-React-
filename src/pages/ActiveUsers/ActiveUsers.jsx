@@ -121,7 +121,6 @@ export default function Customers() {
         </div>
         <div className="col-12">
           {error && <h6 className="mx-2">{error.message}</h6>}
-
           <div className="table-responsive">
             <Table
               columns={columns}

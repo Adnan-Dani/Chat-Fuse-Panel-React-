@@ -1,33 +1,22 @@
-import { useEffect, useMemo, useState } from "react";
-import http from "./../../services/HttpService";
-import Table from "../../components/Table";
+import { useMemo } from "react";
+
 import { Box } from "@mui/material";
 import moment from "moment/moment";
+import QueryVariables from "../../constants";
+import { QueryClient } from "@tanstack/react-query";
+
+// Custom Components
+import Table from "../../components/Table";
 import Button from "./../../components/Button";
 import ExportToExcel from "../../components/ExportToExcel";
 
-export default function Customers() {
-  const [users, setUsers] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const cacheKey = "users";
-  const getList = () => {
-    setLoading(true);
-    const isCache = localStorage.getItem(cacheKey);
-    if (!isCache) {
-      http.get(cacheKey).then((res) => {
-        setUsers(res.data || []);
-        localStorage.setItem(cacheKey, JSON.stringify(res.data || []));
-        setLoading(false);
-      });
-    } else {
-      setUsers(JSON.parse(isCache));
-      setLoading(false);
-    }
-  };
+// Custom Hooks
+import useUsers from "../../hooks/useUsers";
 
-  useEffect(() => {
-    getList();
-  }, []);
+export default function Customers() {
+  const queryClient = new QueryClient();
+
+  const { data: users, loading, error } = useUsers();
 
   const handleExportRows = (rows) => {
     const data = rows.map((row) => row.original);
@@ -37,7 +26,6 @@ export default function Customers() {
     ];
     ExportToExcel(excelRows);
   };
-
   const renderTopToolbarCustomActions = ({ table }) => (
     <Box sx={{ display: "flex", gap: "1rem", p: "0.5rem", flexWrap: "wrap" }}>
       <Button
@@ -111,10 +99,11 @@ export default function Customers() {
               </p>
             </div>
             <div>
-            <Button
+              <Button
                 onClick={() => {
-                  localStorage.removeItem(cacheKey);
-                  getList();
+                  queryClient.invalidateQueries({
+                    queryKey: [QueryVariables.USERS],
+                  });
                 }}
                 title="Clear Cache"
               />
@@ -122,14 +111,15 @@ export default function Customers() {
           </div>
         </div>
         <div className="col-12">
-        <div className="table-responsive">
-                <Table
-                  columns={columns}
-                  data={users}
-                  isLoading={loading}
-                  renderTopToolbarCustomActions={renderTopToolbarCustomActions}
-                />
-              </div>
+          {error && <h6 className="mx-2">{error.message}</h6>}
+          <div className="table-responsive">
+            <Table
+              columns={columns}
+              data={users}
+              isLoading={loading}
+              renderTopToolbarCustomActions={renderTopToolbarCustomActions}
+            />
+          </div>
         </div>
       </div>
     </>
