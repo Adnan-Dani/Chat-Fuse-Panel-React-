@@ -1,46 +1,30 @@
-import { useEffect, useMemo, useState } from "react";
-import http from "./../../services/HttpService";
+import { useMemo } from "react";
 import Table from "../../components/Table";
 import { Box } from "@mui/material";
 import moment from "moment/moment";
 import Button from "./../../components/Button";
 import ExportToExcel from "../../components/ExportToExcel";
- 
+import useUsers from "../../hooks/useUsers";
+import { QueryClient } from "@tanstack/react-query";
+import QueryVariables from "../../constants";
+
 export default function Customers() {
-  const [users, setUsers] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const cacheKey = "users";
-
-
-  const filterData = (list)=>{
+  const queryClient = new QueryClient();
+  const filterData = (list = []) => {
+    if (!(list.length > 0)) return;
     const currentTime = new Date();
-    const twentyFourHoursAgo = new Date(currentTime - 24  * 60 * 60 * 1000); // 24 hours ago in milliseconds
-  
+    const twentyFourHoursAgo = new Date(currentTime - 24 * 60 * 60 * 1000); // 24 hours ago in milliseconds
+
     const filteredUsers = list.filter((user) => {
       const creationTime = new Date(user.lastSignInTime);
       return creationTime > twentyFourHoursAgo;
     });
-    
-      return filteredUsers;
-  }
-  const getList = () => {
-    setLoading(true);
-    const isCache = localStorage.getItem(cacheKey);
-    if (!isCache) {
-      http.get(cacheKey).then((res) => {
-        setUsers(filterData(res.data) || []);
-        localStorage.setItem(cacheKey, JSON.stringify(res.data || []));
-        setLoading(false);
-      });
-    } else {
-      setUsers(filterData(JSON.parse(isCache)));
-      setLoading(false);
-    }
-  };
 
-  useEffect(() => {
-    getList();
-  }, []);
+    return filteredUsers;
+  };
+  const { data, loading, error } = useUsers();
+  // filtering for active users
+  const users = filterData(data);
 
   const handleExportRows = (rows) => {
     const data = rows.map((row) => row.original);
@@ -114,20 +98,21 @@ export default function Customers() {
           </p>
         </div>
       </div>
-      <div className="row mx-2"> 
+      <div className="row mx-2">
         <div className="col-12 d-block pb-4">
           <div className="d-flex justify-content-between px-3">
             <div>
-            <h2 className=" fw-semibold">Active Users</h2>
-          <p className=" fs-3 text-dark mt-n1 fw-normal ">
-            List of active users in last 24 Hours.{" "}
-          </p>
+              <h2 className=" fw-semibold">Active Users</h2>
+              <p className=" fs-3 text-dark mt-n1 fw-normal ">
+                List of active users in last 24 Hours.{" "}
+              </p>
             </div>
             <div>
-            <Button
+              <Button
                 onClick={() => {
-                  localStorage.removeItem(cacheKey);
-                  getList();
+                  queryClient.invalidateQueries({
+                    queryKey: [QueryVariables.USERS],
+                  });
                 }}
                 title="Clear Cache"
               />
@@ -135,14 +120,16 @@ export default function Customers() {
           </div>
         </div>
         <div className="col-12">
-        <div className="table-responsive">
-                <Table
-                  columns={columns}
-                  data={users}
-                  isLoading={loading}
-                  renderTopToolbarCustomActions={renderTopToolbarCustomActions}
-                />
-              </div>
+          {error && <h6 className="mx-2">{error.message}</h6>}
+
+          <div className="table-responsive">
+            <Table
+              columns={columns}
+              data={users}
+              isLoading={loading}
+              renderTopToolbarCustomActions={renderTopToolbarCustomActions}
+            />
+          </div>
         </div>
       </div>
     </>
