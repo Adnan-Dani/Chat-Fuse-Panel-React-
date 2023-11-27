@@ -1,15 +1,17 @@
-import { useEffect, useMemo, useState } from "react";
-import http from "./../../services/HttpService"; 
+import { useMemo } from "react";
+import { Box } from "@mui/material";
+import { QueryClient } from "@tanstack/react-query";
+
+// Custom Components
 import Table from "../../components/Table";
 import Button from "../../components/Button";
 import ExportToExcel from "../../components/ExportToExcel";
-import { Box } from "@mui/material";
+import useQuestions from "../../hooks/useQuestions";
+import QueryVariables from "../../constants";
 
 export default function Questions() {
-  const [users, setUsers] = useState([]);
-  const [loading, setLoading] = useState(false);
-
-  const cacheKey = "answers";
+  const queryClient = new QueryClient();
+  const { data, loading, error } = useQuestions();
   const columns = useMemo(
     () => [
       {
@@ -44,32 +46,6 @@ export default function Questions() {
     ],
     []
   );
-  const getList = () => {
-    setUsers([]);
-    setLoading(true);
-    const isCache = localStorage.getItem(cacheKey);
-
-    if (!isCache) {
-      http.get(cacheKey).then((res) => {
-        const resp = res.data.map((d) => ({
-          id: d.id,
-          name: d.userInfo ? d.userInfo.name : "N/A",
-          email: d.userInfo ? d.userInfo.email : "N/A",
-          profile: d.userInfo ? d.userInfo.profile : "N/A", 
-          ...d
-        }));
-        localStorage.setItem(cacheKey, JSON.stringify(resp));
-        setUsers(resp || []);
-        setLoading(false);
-      });
-    } else {
-      setUsers(JSON.parse(isCache));
-      setLoading(false);
-    }
-  };
-  useEffect(() => {
-    getList();
-  }, []);
   const handleExportRows = (rows) => {
     const data = rows.map((row) => row.original);
     const excelRows = [
@@ -130,8 +106,9 @@ export default function Questions() {
             <div>
               <Button
                 onClick={() => {
-                  localStorage.removeItem(cacheKey);
-                  getList();
+                  queryClient.invalidateQueries({
+                    queryKey: [QueryVariables.QUESTIONS],
+                  });
                 }}
                 title="Clear Cache"
               />
@@ -139,40 +116,42 @@ export default function Questions() {
           </div>
         </div>
         <div className="col-12">
+          {error && <h6 className="mx-2">{error.message}</h6>}
           <div className="table-responsive">
             <Table
               columns={columns}
-              data={users}
+              data={data}
               isLoading={loading}
               renderTopToolbarCustomActions={renderTopToolbarCustomActions}
               renderDetailPanel={({ row }) => (
                 <div className="card card-body">
+                  {console.log(row.original)}
                   <p>
-                    <b>Question 1:</b> {row.original.question1 ?? ""}
+                    <b>Question 1:</b> {row.original["Question 1"] ?? ""}
                   </p>
                   <p>
-                    <b>Answer 1:</b> {row.original.answer1 ?? ""}
-                  </p>
-                  <br></br>
-                  <p>
-                    <b>Question 2:</b> {row.original.question2 ?? ""}
-                  </p>
-                  <p>
-                    <b>Answer 2:</b> {row.original.answer2 ?? ""}
+                    <b>Answer 1:</b> {row.original["Answer 1"] ?? ""}
                   </p>
                   <br></br>
                   <p>
-                    <b>Question 3:</b> {row.original.question3 ?? ""}
+                    <b>Question 2:</b> {row.original["Question 2"] ?? ""}
                   </p>
                   <p>
-                    <b>Answer 3:</b> {row.original.answer3 ?? ""}
+                    <b>Answer 2:</b> {row.original["Answer 2"] ?? ""}
                   </p>
                   <br></br>
                   <p>
-                    <b>Question 4:</b> {row.original.question4 ?? ""}
+                    <b>Question 3:</b> {row.original["Question 3"] ?? ""}
                   </p>
                   <p>
-                    <b>Answer 4:</b> {row.original.answer4 ?? ""}
+                    <b>Answer 3:</b> {row.original["Answer 3"] ?? ""}
+                  </p>
+                  <br></br>
+                  <p>
+                    <b>Question 4:</b> {row.original["Question 4"] ?? ""}
+                  </p>
+                  <p>
+                    <b>Answer 4:</b> {row.original["Answer 4"] ?? ""}
                   </p>
                   <br></br>
                 </div>

@@ -1,7 +1,6 @@
 import MaterialReactTable from "material-react-table";
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
 const Table = ({
-  title = "",
   columns = [],
   data = [],
   RowActions = null,
@@ -27,7 +26,7 @@ const Table = ({
         sx: {
           tableLayout: "inherit",
         },
-      }} 
+      }}
       columns={columns}
       data={data}
       renderRowActions={RowActions}
@@ -57,7 +56,7 @@ const Table = ({
   );
 };
 Table.propTypes = {
-  title : PropTypes.string,
+  title: PropTypes.string,
   columns: PropTypes.array,
   data: PropTypes.array,
   enableRowSelection: PropTypes.any,
